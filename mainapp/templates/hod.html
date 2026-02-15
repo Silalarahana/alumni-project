@@ -1,0 +1,17 @@
+<html>
+<head>
+    <title>ADD ALUMNI</title>
+</head>
+<footer style="text-align:center;margin-top:30px;">
+© 2026 Alumni Placement System
+</footer>
+
+<h2>HOD – Add Alumni</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Save</button>
+</form>
+
+<a href="/">Back to Home</a>

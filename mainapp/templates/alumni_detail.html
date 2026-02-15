@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alumni placement List</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<footer style="text-align:center;margin-top:30px;">
+© 2026 Alumni Placement System
+</footer>
+
+<body>
+    <div class="container mt-4">
+
+  <a href="/" class="btn btn-warning me-2">Home</a>
+
+    <a href="/alumni/" class="btn btn-primary me-2">View Alumni</a>
+    <a href="/notifications/" class="btn btn-success me-2">Notifications</a>
+    <hr>
+      <a href="/admin/mainapp/alumni/{{ alumni.id }}/change/" class="btn btn-warning">Edit</a>
+
+    <h2>{{ alumni.name }}</h2>
+    {% if alumni.photo %}
+     <img src="{{ alumni.photo.url }}" width="150" class="img-thumbnail">
+    {% endif %}
+
+    <p>Department: {{ alumni.department }}</p>
+    <p>Company: {{ alumni.company }}</p>
+    <p>Graduation Year: {{ alumni.graduation_year }}</p>
+
+    <a href="/alumni/">Back</a>
+    <hr>
+    <p style="text-align:center;">© 2026 Alumni Placement System</p>
+    <hr>
+    <p style="text-align:center;">© 2026 Alumni Placement System</p>
+    </div>
+</body>
+</html>

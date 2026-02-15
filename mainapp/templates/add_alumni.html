@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <title>add alumni</title>
+        <style>
+.form-container {
+    width: 400px;
+    margin: auto;
+    background: #f7f7f7;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+label {
+    font-weight: bold;
+    margin-top: 10px;
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+button {
+    margin-top: 20px;
+    width: 100%;
+    padding: 10px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+</style>
+
+    </head>
+<body>
+</html>
+
+<h2 style="text-align:center;">Add Alumni</h2>
+
+<div class="form-container">
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label>Name</label>
+    <input type="text" name="name">
+
+    <label>Department</label>
+    <input type="text" name="department">
+
+    <label>Graduation Year</label>
+    <input type="number" name="graduation_year">
+
+    <label>Company</label>
+    <input type="text" name="company">
+
+    <label>Photo</label>
+    <input type="file" name="photo">
+
+    <label>Email</label>
+    <input type="email" name="email">
+
+    <label>Phone</label>
+    <input type="text" name="phone">
+
+    <label>Job Title</label>
+    <input type="text" name="job_title">
+
+    <label>Location</label>
+    <input type="text" name="location">
+
+    <button type="submit">Save Alumni</button>
+</form>
+</div>
+</body>

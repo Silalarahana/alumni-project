@@ -1,0 +1,524 @@
+{% extends "base.html" %}
+{% block title %}About the Portal | PlaceNotify Connect{% endblock %}
+
+{% block content %}
+<style>
+  .about-wrap{
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 12px 50px;
+  }
+
+  .hero-about{
+    margin-top: 18px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    padding: 60px 34px;
+    background:
+      radial-gradient(circle at top left, rgba(37,99,235,0.20), transparent 34%),
+      radial-gradient(circle at top right, rgba(124,58,237,0.18), transparent 30%),
+      linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #2563eb 100%);
+    color: #fff;
+    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.18);
+  }
+
+  .hero-about::before{
+    content: "";
+    position: absolute;
+    width: 280px;
+    height: 280px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.07);
+    right: -90px;
+    top: -80px;
+  }
+
+  .hero-about::after{
+    content: "";
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    left: -50px;
+    bottom: -80px;
+  }
+
+  .hero-badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 18px;
+  }
+
+  .hero-about h1{
+    font-size: 42px;
+    line-height: 1.1;
+    font-weight: 950;
+    letter-spacing: -0.03em;
+    margin-bottom: 16px;
+    max-width: 820px;
+  }
+
+  .hero-about p{
+    max-width: 850px;
+    font-size: 17px;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.92);
+    margin-bottom: 0;
+  }
+
+  .section-space{ margin-top: 40px; }
+
+  .section-title{
+    font-size: 32px;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.03em;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .section-subtitle{
+    text-align: center;
+    color: #475569;
+    max-width: 860px;
+    margin: 0 auto 24px;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  .info-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .info-card{
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 24px;
+    box-shadow: 0 12px 28px rgba(2,6,23,0.05);
+    height: 100%;
+  }
+
+  .info-icon{
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #dbeafe, #ede9fe);
+  }
+
+  .info-card h4{
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 10px;
+  }
+
+  .info-card p{
+    color: #475569;
+    line-height: 1.75;
+    margin: 0;
+  }
+
+  .split-grid{
+    display: grid;
+    grid-template-columns: 1.2fr 1fr;
+    gap: 24px;
+    align-items: stretch;
+  }
+
+  .panel{
+    background: #fff;
+    border: 1px solid rgba(15,23,42,0.08);
+    border-radius: 22px;
+    box-shadow: 0 12px 28px rgba(2,6,23,0.05);
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .panel-head{
+    padding: 18px 22px;
+    border-bottom: 1px solid #e2e8f0;
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+  }
+
+  .panel-head h4{
+    margin: 0;
+    font-weight: 950;
+    color: #0f172a;
+  }
+
+  .panel-body{
+    padding: 22px;
+  }
+
+  .point-list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .point-list li{
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    padding: 12px 0;
+    border-bottom: 1px solid #eef2f7;
+    color: #334155;
+    line-height: 1.7;
+  }
+
+  .point-list li:last-child{
+    border-bottom: none;
+  }
+
+  .point-mark{
+    min-width: 30px;
+    height: 30px;
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #eff6ff;
+    color: #1d4ed8;
+    font-weight: 900;
+    margin-top: 2px;
+  }
+
+  .purpose-box{
+    background: linear-gradient(135deg, #eff6ff, #f5f3ff);
+    border: 1px solid #dbeafe;
+    border-radius: 20px;
+    padding: 22px;
+    color: #1e293b;
+    line-height: 1.8;
+  }
+
+  .purpose-box strong{
+    color: #0f172a;
+  }
+
+  .privacy-box{
+    background: #0f172a;
+    color: #fff;
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: 0 18px 40px rgba(15,23,42,0.18);
+  }
+
+  .privacy-box h4{
+    font-weight: 950;
+    margin-bottom: 10px;
+  }
+
+  .privacy-box p{
+    margin: 0;
+    line-height: 1.8;
+    color: rgba(255,255,255,0.9);
+  }
+
+  .flow-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+
+  .flow-card{
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 10px 24px rgba(2,6,23,0.05);
+    text-align: center;
+    height: 100%;
+  }
+
+  .flow-step{
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    font-weight: 900;
+  }
+
+  .flow-card h5{
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 8px;
+  }
+
+  .flow-card p{
+    color: #475569;
+    margin: 0;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  .cta-band{
+    margin-top: 42px;
+    border-radius: 24px;
+    padding: 34px 26px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+    box-shadow: 0 18px 40px rgba(37,99,235,0.22);
+  }
+
+  .cta-band h3{
+    font-weight: 950;
+    margin-bottom: 10px;
+  }
+
+  .cta-band p{
+    margin: 0 auto 18px;
+    max-width: 740px;
+    color: rgba(255,255,255,.92);
+    line-height: 1.8;
+  }
+
+  .cta-actions{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .cta-actions .btn{
+    border-radius: 14px;
+    font-weight: 900;
+    padding: 11px 18px;
+  }
+
+  @media (max-width: 991px){
+    .info-grid,
+    .flow-grid,
+    .split-grid{
+      grid-template-columns: 1fr;
+    }
+
+    .hero-about h1{
+      font-size: 34px;
+    }
+  }
+
+  @media (max-width: 576px){
+    .hero-about{
+      padding: 38px 20px;
+    }
+
+    .hero-about h1{
+      font-size: 28px;
+    }
+
+    .section-title{
+      font-size: 26px;
+    }
+  }
+</style>
+
+<div class="about-wrap">
+
+  <!-- HERO -->
+  <section class="hero-about">
+    <div class="hero-badge">ℹ️ About the Portal</div>
+    <h1>PlaceNotify Connect is built to inform students and support departments with secure digital record management</h1>
+    <p>
+      This portal is designed as a public-facing platform for notifications, institutional highlights,
+      and career-related updates, while also supporting authorized department staff in maintaining
+      important alumni and placement records in a structured digital format.
+    </p>
+  </section>
+
+  <!-- OVERVIEW -->
+  <section class="section-space">
+    <h2 class="section-title">What This Portal Does</h2>
+    <p class="section-subtitle">
+      The platform serves two important purposes: it keeps students informed through official updates,
+      and it helps departments maintain reliable digital records for reporting, review, and accreditation needs.
+    </p>
+
+    <div class="info-grid">
+      <div class="info-card">
+        <div class="info-icon">📢</div>
+        <h4>Public Information Access</h4>
+        <p>
+          All visitors can view official department notifications, public announcements,
+          programme information, and selected success highlights through one modern portal.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">🎓</div>
+        <h4>Student-Focused Guidance</h4>
+        <p>
+          Students can stay updated on important notices, placement-related communication,
+          departmental updates, and general academic or career-oriented information.
+        </p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-icon">🏫</div>
+        <h4>Department Record Support</h4>
+        <p>
+          Authorized department users such as HODs can securely maintain alumni and placement-related
+          records in digital form, reducing manual work and preventing data loss.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHO BENEFITS -->
+  <section class="section-space">
+    <div class="split-grid">
+
+      <div class="panel">
+        <div class="panel-head">
+          <h4>How Students Benefit</h4>
+        </div>
+        <div class="panel-body">
+          <ul class="point-list">
+            <li>
+              <span class="point-mark">1</span>
+              <span>Students can quickly check the latest department notifications and important announcements in one place.</span>
+            </li>
+            <li>
+              <span class="point-mark">2</span>
+              <span>The portal helps students stay informed about placement-related communication, opportunities, and institutional updates.</span>
+            </li>
+            <li>
+              <span class="point-mark">3</span>
+              <span>Public success highlights can motivate students by showing examples of academic progress and career achievement.</span>
+            </li>
+            <li>
+              <span class="point-mark">4</span>
+              <span>Programme details and department information are presented clearly for easy reference.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h4>How Departments Benefit</h4>
+        </div>
+        <div class="panel-body">
+          <ul class="point-list">
+            <li>
+              <span class="point-mark">1</span>
+              <span>HODs and authorized staff can maintain alumni and placement records in a centralized digital system.</span>
+            </li>
+            <li>
+              <span class="point-mark">2</span>
+              <span>Important records can be preserved safely instead of being handled only through manual files and paper-based methods.</span>
+            </li>
+            <li>
+              <span class="point-mark">3</span>
+              <span>The system supports record collection and future reference during accreditation and departmental review processes.</span>
+            </li>
+            <li>
+              <span class="point-mark">4</span>
+              <span>Structured data management makes reporting easier, faster, and more reliable for academic administration.</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PURPOSE -->
+  <section class="section-space">
+    <h2 class="section-title">Why This Portal Matters</h2>
+    <p class="section-subtitle">
+      Digital record management is essential for continuity, accountability, and institutional quality improvement.
+    </p>
+
+    <div class="purpose-box">
+      <strong>PlaceNotify Connect</strong> helps departments avoid the risk of losing important alumni and placement data.
+      Instead of storing information only through manual records, authorized staff can maintain details digitally in a more
+      organized and dependable way. This becomes especially valuable when departments need accurate information for review,
+      quality assurance, or accreditation-related work such as NAAC documentation.
+    </div>
+  </section>
+
+  <!-- WORKFLOW -->
+  <section class="section-space">
+    <h2 class="section-title">How the Portal Works</h2>
+    <p class="section-subtitle">
+      The portal keeps the public experience simple while protecting internal academic records through authorized access.
+    </p>
+
+    <div class="flow-grid">
+      <div class="flow-card">
+        <div class="flow-step">1</div>
+        <h5>Public Homepage</h5>
+        <p>Visitors access a common homepage containing safe public information such as notifications, highlights, and programme details.</p>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-step">2</div>
+        <h5>Student Awareness</h5>
+        <p>Students use the portal mainly to stay informed about official updates and department communication.</p>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-step">3</div>
+        <h5>Authorized Access</h5>
+        <p>Only HODs or authorized department users can access management features related to alumni records and internal information.</p>
+      </div>
+
+      <div class="flow-card">
+        <div class="flow-step">4</div>
+        <h5>Reliable Records</h5>
+        <p>The department benefits from secure, organized, and reusable digital data for administration and accreditation support.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRIVACY -->
+  <section class="section-space">
+    <div class="privacy-box">
+      <h4>Privacy and Access Note</h4>
+      <p>
+        Student and alumni records are managed only by authorized department personnel.
+        Public users can view general portal information and official notifications, but sensitive academic
+        and alumni details are not intended for open public access.
+      </p>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-band">
+    <h3>Stay informed through official updates and department communication</h3>
+    <p>
+      Explore the latest notifications, learn more about the portal’s purpose, and understand how digital record
+      management supports both students and the department.
+    </p>
+
+    <div class="cta-actions">
+      <a href="{% url 'home' %}" class="btn btn-light btn-lg">Back to Home</a>
+      <a href="{% url 'notifications' %}" class="btn btn-outline-light btn-lg">View Notifications</a>
+    </div>
+  </section>
+
+</div>
+{% endblock %}

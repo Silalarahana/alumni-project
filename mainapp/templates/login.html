@@ -1,15 +1,115 @@
-<html>
-<head>
-    <title>LOGIN</title>
-</head>
-<footer style="text-align:center;margin-top:30px;">
-© 2026 Alumni Placement System
-</footer>
+{% extends "base.html" %}
+{% block title %}Login{% endblock %}
 
-<h2>HOD Login</h2>
+{% block content %}
+<style>
+  .auth-wrap{max-width:520px; margin:0 auto;}
+  .auth-card{
+    border-radius: 18px;
+    border: 1px solid rgba(15,23,42,0.08);
+    box-shadow: 0 16px 35px rgba(2,6,23,0.10);
+    overflow:hidden;
+    background:#fff;
+  }
+  .auth-head{
+    color:#fff;
+    padding: 18px 18px;
+    background:
+      radial-gradient(900px 260px at 10% 0%, rgba(37,99,235,.25), transparent 55%),
+      radial-gradient(900px 260px at 90% 0%, rgba(147,51,234,.20), transparent 55%),
+      linear-gradient(90deg, #0f172a, #1e293b);
+  }
+  .auth-title{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:10px;
+    font-weight: 950;
+    margin:0;
+    letter-spacing: -0.02em;
+  }
+  .auth-icon{
+    width:34px;height:34px;
+    border-radius: 12px;
+    display:flex;align-items:center;justify-content:center;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.25);
+  }
+  .hint{
+    color:#64748b;
+    font-weight:700;
+  }
+  .btn-round{border-radius: 14px; font-weight: 950;}
+</style>
 
-<form method="POST">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+<div class="container mt-4 auth-wrap">
+
+  <div class="auth-card">
+    <div class="auth-head">
+      <h4 class="auth-title">
+        <span class="auth-icon">🔐</span>
+        Staff Login
+      </h4>
+      <div class="text-center mt-2" style="color:rgba(255,255,255,0.85); font-weight:700;">
+        Login as <strong>HOD</strong> or <strong>Teacher</strong> to manage alumni & notifications
+      </div>
+    </div>
+
+    <div class="p-4">
+
+      {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <form method="POST" novalidate>
+        {% csrf_token %}
+
+        {% for field in form %}
+          <div class="mb-3">
+            <label class="form-label fw-bold">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}
+              <div class="text-danger small mt-1">
+                {{ field.errors|striptags }}
+              </div>
+            {% endif %}
+          </div>
+        {% endfor %}
+
+        <!-- ✅ only ONE button -->
+        <button type="submit" class="btn btn-primary w-100 btn-round py-2">
+          Login
+        </button>
+      </form>
+
+      <hr class="my-4">
+
+      <div class="text-center">
+        <div class="hint">
+          Students can view alumni details without logging in.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- Make default Django form fields look Bootstrap-like -->
+<style>
+  input[type="text"], input[type="password"], input[type="email"], select, textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 12px;
+    outline: none;
+    font-weight: 700;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 0.15rem rgba(37, 99, 235, 0.25);
+  }
+</style>
+{% endblock %}

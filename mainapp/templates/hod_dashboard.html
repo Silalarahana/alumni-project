@@ -1,13 +1,171 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>HOD Dashboard</title>
-</head>
-<body>
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
 
-<h1>Welcome HOD</h1>
+{% block content %}
+<style>
+  .dash-wrap{max-width: 1150px; margin: 0 auto;}
 
-<a href="{% url 'alumni_list' %}">Manage Alumni</a>
+  .hero{
+    border-radius: 18px;
+    padding: 26px;
+    color:#0f172a;
+    background:
+      radial-gradient(900px 320px at 10% 0%, rgba(37,99,235,.20), transparent 55%),
+      radial-gradient(900px 320px at 90% 0%, rgba(147,51,234,.16), transparent 55%),
+      linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px solid rgba(15,23,42,0.08);
+    box-shadow: 0 16px 35px rgba(2,6,23,0.08);
+  }
 
-</body>
-</html>
+  .hero-title{
+    font-size: 30px;
+    font-weight: 950;
+    letter-spacing: -0.02em;
+    margin: 0;
+  }
+
+  .pill{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 950;
+    font-size: 12px;
+    border: 1px solid rgba(15,23,42,0.10);
+    background: rgba(255,255,255,0.7);
+  }
+
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  @media (max-width: 992px){ .grid{grid-template-columns:1fr;} }
+
+  .cardx{
+    border-radius: 18px;
+    padding: 18px;
+    background:#fff;
+    border: 1px solid rgba(15,23,42,0.08);
+    box-shadow: 0 14px 30px rgba(2,6,23,0.07);
+    height: 100%;
+  }
+
+  .cardx h5{
+    font-weight: 950;
+    margin: 0 0 6px 0;
+    color:#0f172a;
+  }
+
+  .cardx p{
+    margin:0;
+    color:#64748b;
+    font-weight: 700;
+    line-height: 1.55;
+  }
+
+  .btn-round{border-radius: 14px; font-weight: 950;}
+  .btn-purple{background:#9333ea; color:white;}
+  .btn-purple:hover{background:#7e22ce; color:white;}
+
+  .accent{
+    width: 42px; height: 42px;
+    border-radius: 14px;
+    display:flex; align-items:center; justify-content:center;
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 12px;
+  }
+  .a-blue{background: rgba(37,99,235,.14); color:#1d4ed8; border:1px solid rgba(37,99,235,.18);}
+  .a-green{background: rgba(16,185,129,.14); color:#047857; border:1px solid rgba(16,185,129,.20);}
+  .a-purple{background: rgba(147,51,234,.14); color:#7e22ce; border:1px solid rgba(147,51,234,.20);}
+</style>
+
+<div class="container mt-4 dash-wrap">
+
+  <!-- HERO -->
+  <div class="hero mb-4">
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+
+      <div>
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <span class="pill">👤 {{ request.user.username }}</span>
+
+          {% if user.is_authenticated and user.teacher %}
+            <span class="pill">🏷 Role: {{ user.teacher.role }}</span>
+            <span class="pill">🎓 Dept: {{ user.teacher.department.name }}</span>
+          {% endif %}
+        </div>
+
+        <p class="hero-title mb-1">Dashboard</p>
+        <p class="text-muted mb-0" style="font-weight:700;">
+          Manage alumni data and placement notifications with quick actions.
+        </p>
+      </div>
+
+      <div class="d-flex gap-2">
+        <a href="{% url 'alumni_list' %}" class="btn btn-outline-dark btn-round">Open Alumni</a>
+        <a href="{% url 'notifications' %}" class="btn btn-outline-secondary btn-round">Open Notifications</a>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CARDS -->
+  <div class="grid">
+
+    <!-- Manage Alumni -->
+    <div class="cardx">
+      <div class="accent a-blue">👥</div>
+      <h5>Manage Alumni</h5>
+      <p>View alumni directory, search records and open profiles.</p>
+      <div class="mt-3">
+        <a href="{% url 'alumni_list' %}" class="btn btn-primary btn-round w-100">
+          Go to Alumni
+        </a>
+      </div>
+    </div>
+
+    <!-- Add Alumni (HOD only) -->
+    <div class="cardx">
+      <div class="accent a-green">➕</div>
+      <h5>Add Alumni</h5>
+      <p>Create a new alumni record (HOD only).</p>
+
+      <div class="mt-3">
+        {% if user.is_authenticated and user.teacher and user.teacher.role == "HOD" %}
+          <a href="{% url 'add_alumni' %}" class="btn btn-success btn-round w-100">
+            Add Alumni
+          </a>
+        {% else %}
+          <button class="btn btn-outline-success btn-round w-100" disabled>
+            Only HOD can add alumni
+          </button>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Add Notification (Teacher only) -->
+    <div class="cardx">
+      <div class="accent a-purple">🔔</div>
+      <h5>Notifications</h5>
+      <p>View placement notifications. Teachers can also post updates.</p>
+
+      <div class="mt-3 d-grid gap-2">
+        <a href="{% url 'notifications' %}" class="btn btn-purple btn-round">
+          View Notifications
+        </a>
+
+        {% if user.is_authenticated and user.teacher and user.teacher.role == "TEACHER" %}
+          <a href="{% url 'add_notification' %}" class="btn btn-outline-dark btn-round">
+            + Add Notification
+          </a>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}  

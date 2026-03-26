@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block title %}Add Notification{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4" style="max-width: 800px;">
+
+  <div class="card shadow-sm border-0">
+    
+    <div class="card-header text-white" style="background:#1f2937;">
+      <h4 class="mb-0">Add Placement Notification</h4>
+    </div>
+
+    <div class="card-body">
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <!-- Title -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Notification Title</label>
+          <input type="text" name="title" class="form-control"
+                 placeholder="Example: Campus Recruitment 2026" required>
+        </div>
+
+        <!-- Notification Type -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Notification Type</label>
+          <select name="notification_type" class="form-select" required>
+            <option value="">Select Notification Type</option>
+            <option value="career">Career Guidance</option>
+            <option value="exam">Exams</option>
+            <option value="job">Job Opportunity</option>
+            <option value="workshop">Workshops</option>
+          </select>
+        </div>
+
+        <!-- Message -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Notification Message</label>
+          <textarea name="message" class="form-control" rows="5"
+          placeholder="Write the notification details here..." required></textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-end gap-2">
+
+          <a href="{% url 'notifications' %}" class="btn btn-outline-secondary">
+            Cancel
+          </a>
+
+          <button type="submit" class="btn btn-success px-4">
+            Save Notification
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

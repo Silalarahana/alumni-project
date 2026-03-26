@@ -32,11 +32,11 @@ urlpatterns = [
     path('notifications/', views.notifications),
     path('hod/', views.hod_add_alumni),
     path('login/', auth_views.LoginView.as_view(template_name='login.html'), name='login'),
-    path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('logout/', views.logout_view, name='logout'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('', include('mainapp.urls')),
     path('hod-dashboard/', views.hod_dashboard, name='hod_dashboard'),
+    path('notification/<int:pk>/', views.notification_detail, name='notification_detail'),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

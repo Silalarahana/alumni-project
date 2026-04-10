@@ -371,6 +371,9 @@
     .hero-lpu h1{
       font-size: 30px;
     }
+    .hero-btns {
+      margin-top: 10px;
+    }
 
   }
   .programme-grid{
@@ -400,29 +403,53 @@
 <div class="landing-wrap">
 
   <!-- HERO -->
-  <section class="hero-lpu mt-3">
-    <div class="hero-badge">
-      🎓 PlaceNotify Connect
-      {% if teacher %}
-        • {{ teacher.role }} • {{ teacher.department.name }}
-      {% else %}
-        • Public View
-      {% endif %}
-    </div>
+<!-- HERO -->
+<section class="hero-lpu mt-3">
 
-    <h1>Shaping careers through student success and placement excellence</h1>
-    <hr>
+  <div class="hero-badge">
+    🚀 Official Placement & Alumni Platform
+    {% if teacher %}
+      • {{ teacher.role }} • {{ teacher.department.name }}
+    {% else %}
+      • Public Access Portal
+    {% endif %}
+  </div>
 
-    <p>
-      Explore student achievements, discover placement trends, connect with recruiters,
-      and stay updated with department notifications through one powerful and modern portal.
-    </p>
+  <h1>PlaceNotify Connect</h1>
 
-    <hr>
+  <h2 style="
+      font-size: 22px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 14px;
+  ">
+    Smart Placement Tracking & Student Success Platform
+  </h2>
 
-    
-  </section>
+  <p>
+    A centralized platform to track placements, highlight student achievements,
+    and provide departments with meaningful insights.
+  </p>
 
+  <div class="hero-btns">
+
+    {% if user.is_authenticated %}
+      <a href="{% url 'hod_dashboard' %}" class="btn btn-light">
+        Go to Dashboard
+      </a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn btn-light">
+        Login to Continue
+      </a>
+    {% endif %}
+
+    <a href="{% url 'about_portal' %}" class="btn btn-outline-light">
+      Learn More
+    </a>
+
+  </div>
+
+</section>
   <!-- HIGHLIGHTS -->
   <section class="section-space">
     <h2 class="section-title">Career Outcomes That Inspire</h2>

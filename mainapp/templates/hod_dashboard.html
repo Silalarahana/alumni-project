@@ -2,170 +2,220 @@
 {% block title %}Dashboard{% endblock %}
 
 {% block content %}
+
 <style>
-  .dash-wrap{max-width: 1150px; margin: 0 auto;}
+body{
+  background:#f4f6f9;
+  font-family:'Segoe UI', sans-serif;
+}
 
-  .hero{
-    border-radius: 18px;
-    padding: 26px;
-    color:#0f172a;
-    background:
-      radial-gradient(900px 320px at 10% 0%, rgba(37,99,235,.20), transparent 55%),
-      radial-gradient(900px 320px at 90% 0%, rgba(147,51,234,.16), transparent 55%),
-      linear-gradient(180deg, #ffffff, #f8fafc);
-    border: 1px solid rgba(15,23,42,0.08);
-    box-shadow: 0 16px 35px rgba(2,6,23,0.08);
-  }
+.dash-wrap{
+  max-width:1200px;
+  margin:auto;
+}
 
-  .hero-title{
-    font-size: 30px;
-    font-weight: 950;
-    letter-spacing: -0.02em;
-    margin: 0;
-  }
+.hero{
+  padding:20px 25px;
+  border-radius:12px;
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  margin-bottom:20px;
+}
 
-  .pill{
-    display:inline-flex;
-    align-items:center;
-    gap:8px;
-    padding: 6px 10px;
-    border-radius: 999px;
-    font-weight: 950;
-    font-size: 12px;
-    border: 1px solid rgba(15,23,42,0.10);
-    background: rgba(255,255,255,0.7);
-  }
+.hero h2{
+  font-size:22px;
+  font-weight:700;
+}
 
-  .grid{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-  @media (max-width: 992px){ .grid{grid-template-columns:1fr;} }
+.hero p{
+  color:#6b7280;
+  font-size:14px;
+}
 
-  .cardx{
-    border-radius: 18px;
-    padding: 18px;
-    background:#fff;
-    border: 1px solid rgba(15,23,42,0.08);
-    box-shadow: 0 14px 30px rgba(2,6,23,0.07);
-    height: 100%;
-  }
+.stat-box{
+  background:#fff;
+  padding:18px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+}
 
-  .cardx h5{
-    font-weight: 950;
-    margin: 0 0 6px 0;
-    color:#0f172a;
-  }
+.stat-number{
+  font-size:24px;
+  font-weight:800;
+}
 
-  .cardx p{
-    margin:0;
-    color:#64748b;
-    font-weight: 700;
-    line-height: 1.55;
-  }
+.stat-label{
+  color:#6b7280;
+  font-size:13px;
+}
 
-  .btn-round{border-radius: 14px; font-weight: 950;}
-  .btn-purple{background:#9333ea; color:white;}
-  .btn-purple:hover{background:#7e22ce; color:white;}
+.cardx{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+}
 
-  .accent{
-    width: 42px; height: 42px;
-    border-radius: 14px;
-    display:flex; align-items:center; justify-content:center;
-    font-size: 18px;
-    font-weight: 900;
-    margin-bottom: 12px;
-  }
-  .a-blue{background: rgba(37,99,235,.14); color:#1d4ed8; border:1px solid rgba(37,99,235,.18);}
-  .a-green{background: rgba(16,185,129,.14); color:#047857; border:1px solid rgba(16,185,129,.20);}
-  .a-purple{background: rgba(147,51,234,.14); color:#7e22ce; border:1px solid rgba(147,51,234,.20);}
+.recent-item{
+  padding:12px;
+  border:1px solid #e5e7eb;
+  border-radius:8px;
+  margin-bottom:10px;
+}
 </style>
 
 <div class="container mt-4 dash-wrap">
 
   <!-- HERO -->
-  <div class="hero mb-4">
-    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
-
-      <div>
-        <div class="d-flex flex-wrap gap-2 mb-2">
-          <span class="pill">👤 {{ request.user.username }}</span>
-
-          {% if user.is_authenticated and user.teacher %}
-            <span class="pill">🏷 Role: {{ user.teacher.role }}</span>
-            <span class="pill">🎓 Dept: {{ user.teacher.department.name }}</span>
-          {% endif %}
-        </div>
-
-        <p class="hero-title mb-1">Dashboard</p>
-        <p class="text-muted mb-0" style="font-weight:700;">
-          Manage alumni data and placement notifications with quick actions.
-        </p>
-      </div>
-
-      <div class="d-flex gap-2">
-        <a href="{% url 'alumni_list' %}" class="btn btn-outline-dark btn-round">Open Alumni</a>
-        <a href="{% url 'notifications' %}" class="btn btn-outline-secondary btn-round">Open Notifications</a>
-      </div>
-
-    </div>
+  <div class="hero">
+    <h2>Dashboard</h2>
+    <p>
+      Welcome, {{ request.user.username }} • 
+      {{ user.teacher.role }} • 
+      {{ user.teacher.department.name }}
+    </p>
   </div>
 
-  <!-- CARDS -->
-  <div class="grid">
+  <!-- STATS -->
+  <div class="row g-3 mb-4">
 
-    <!-- Manage Alumni -->
-    <div class="cardx">
-      <div class="accent a-blue">👥</div>
-      <h5>Manage Alumni</h5>
-      <p>View alumni directory, search records and open profiles.</p>
-      <div class="mt-3">
-        <a href="{% url 'alumni_list' %}" class="btn btn-primary btn-round w-100">
-          Go to Alumni
+    <div class="col-md-4">
+      <div class="stat-box">
+        <div class="stat-number">{{ alumni_count }}</div>
+        <div class="stat-label">Total Alumni</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="stat-box">
+        <div class="stat-number">{{ notification_count }}</div>
+        <div class="stat-label">Notifications</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="stat-box">
+        <div class="stat-number">{{ recent_count }}</div>
+        <div class="stat-label">Recent Posts</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 📊 CHARTS -->
+  {% if user.teacher.role == "HOD" %}
+  <div class="row g-3 mb-4">
+  
+    <div class="col-md-6">
+      <div class="cardx">
+        <h5>Placement Trend (Year-wise)</h5>
+        <canvas id="yearChart"></canvas>
+      </div>
+    </div>
+  
+    <div class="col-md-6">
+      <div class="cardx">
+        <h5>Salary Distribution</h5>
+        <canvas id="salaryChart"></canvas>
+      </div>
+    </div>
+  
+  </div>
+  {% endif %}
+  <!-- ACTIONS -->
+  <div class="row g-3 mb-4">
+
+    {% if user.teacher.role == "HOD" %}
+    <div class="col-md-6">
+      <div class="cardx">
+        <h5>Alumni Management</h5>
+    
+        <a href="{% url 'alumni_list' %}" class="btn btn-primary w-100 mb-2">
+          View Alumni
+        </a>
+    
+        <a href="{% url 'add_alumni' %}" class="btn btn-success w-100">
+          Add Alumni
         </a>
       </div>
     </div>
+    {% endif %}
 
-    <!-- Add Alumni (HOD only) -->
-    <div class="cardx">
-      <div class="accent a-green">➕</div>
-      <h5>Add Alumni</h5>
-      <p>Create a new alumni record (HOD only).</p>
-
-      <div class="mt-3">
-        {% if user.is_authenticated and user.teacher and user.teacher.role == "HOD" %}
-          <a href="{% url 'add_alumni' %}" class="btn btn-success btn-round w-100">
-            Add Alumni
-          </a>
-        {% else %}
-          <button class="btn btn-outline-success btn-round w-100" disabled>
-            Only HOD can add alumni
-          </button>
-        {% endif %}
-      </div>
-    </div>
-
-    <!-- Add Notification (Teacher only) -->
-    <div class="cardx">
-      <div class="accent a-purple">🔔</div>
-      <h5>Notifications</h5>
-      <p>View placement notifications. Teachers can also post updates.</p>
-
-      <div class="mt-3 d-grid gap-2">
-        <a href="{% url 'notifications' %}" class="btn btn-purple btn-round">
+    <div class="col-md-6">
+      <div class="cardx">
+        <h5>Notifications</h5>
+    
+        <a href="{% url 'notifications' %}" class="btn btn-dark w-100">
           View Notifications
         </a>
-
-        {% if user.is_authenticated and user.teacher and user.teacher.role == "TEACHER" %}
-          <a href="{% url 'add_notification' %}" class="btn btn-outline-dark btn-round">
-            + Add Notification
-          </a>
+    
+        {% if user.teacher.role == "TEACHER" %}
+        <a href="{% url 'add_notification' %}" class="btn btn-outline-dark w-100 mt-2">
+          + Add Notification
+        </a>
         {% endif %}
+    
       </div>
     </div>
 
+  </div>
+
+  <!-- RECENT -->
+  <div class="cardx">
+    <h5 class="mb-3">Recent Notifications</h5>
+
+    {% for n in recent_notifications %}
+      <div class="recent-item">
+        <strong>{{ n.title }}</strong><br>
+        <small class="text-muted">
+          {{ n.created_at|date:"M d, Y - h:i A" }}
+        </small>
+      </div>
+    {% empty %}
+      <p class="text-muted">No recent notifications</p>
+    {% endfor %}
   </div>
 
 </div>
-{% endblock %}  
+
+<!-- ✅ CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+  const yearLabels = {{ year_labels|safe }};
+  const yearData = {{ year_data|safe }};
+
+  const salaryLabels = {{ salary_labels|safe }};
+  const salaryData = {{ salary_data|safe }};
+
+  // 📊 LINE CHART
+  new Chart(document.getElementById('yearChart'), {
+      type: 'line',
+      data: {
+          labels: yearLabels,
+          datasets: [{
+              label: 'Alumni Trend',
+              data: yearData,
+              tension: 0.4,
+              fill: true
+          }]
+      }
+  });
+
+  // 🥧 PIE CHART
+  new Chart(document.getElementById('salaryChart'), {
+      type: 'doughnut',
+      data: {
+          labels: salaryLabels,
+          datasets: [{
+              data: salaryData
+          }]
+      }
+  });
+
+});
+</script>
+
+{% endblock %}

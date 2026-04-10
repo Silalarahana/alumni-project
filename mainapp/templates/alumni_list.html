@@ -100,6 +100,26 @@
   .btn-round{ border-radius: 12px; font-weight: 900; }
 
   .actions{ display:flex; gap:8px; flex-wrap: wrap; }
+  @media print {
+    body * {
+      visibility: hidden;
+    }
+  
+    .panel, .panel * {
+      visibility: visible;
+    }
+  
+    .panel {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+    }
+  
+    .panel-head .btn {
+      display: none !important;
+    }
+  }
 </style>
 
 <div class="container mt-4 page-wrap">
@@ -119,16 +139,14 @@
         {% if user.is_authenticated and user.teacher %}
           <span class="badge-soft">👤 {{ user.teacher.role }}</span>
         {% endif %}
-
-        {% if user.is_authenticated and user.teacher and user.teacher.role == "HOD" %}
-          <a href="{% url 'add_department' %}" class="btn btn-outline-light btn-round">
-            + Add Department
-          </a>
-
-          <a href="{% url 'add_alumni' %}" class="btn btn-success btn-round">
-            + Add Alumni
-          </a>
-        {% endif %}
+        <a href="#" onclick="window.print()" class="btn btn-light btn-round">
+          🖨️ Print
+        </a>
+        
+        <a href="{% url 'export_alumni_csv' %}?{{ request.GET.urlencode }}" 
+           class="btn btn-warning btn-round">
+          ⬇️ Export CSV
+        </a>
       </div>
     </div>
 
@@ -136,15 +154,15 @@
 
       <!-- FILTERS -->
       <div class="filter-card mb-4">
-        <form method="GET" action="{% url 'alumni_list' %}" class="row g-2 align-items-end">
-
+        <form method="GET" action="{% url 'alumni_list' %}" class="row g-3 align-items-end">
+      
           <div class="col-md-4">
             <label class="form-label fw-bold">Search</label>
             <input type="text" name="search" class="form-control"
-                   placeholder="Search by name"
+                   placeholder="Search by name, email or phone"
                    value="{{ request.GET.search }}">
           </div>
-
+      
           <div class="col-md-4">
             <label class="form-label fw-bold">Department</label>
             <select name="dept" class="form-select">
@@ -156,34 +174,130 @@
               {% endfor %}
             </select>
           </div>
-
+      
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Programme</label>
+            <select name="programme" class="form-select">
+              <option value="">All Programmes</option>
+      
+              <optgroup label="Science">
+                <option value="MSc Integrated Computer Science" {% if request.GET.programme == "MSc Integrated Computer Science" %}selected{% endif %}>MSc Integrated Computer Science</option>
+                <option value="BSc Plant Science" {% if request.GET.programme == "BSc Plant Science" %}selected{% endif %}>BSc Plant Science</option>
+                <option value="BSc Mathematics" {% if request.GET.programme == "BSc Mathematics" %}selected{% endif %}>BSc Mathematics</option>
+                <option value="BSc Statistics" {% if request.GET.programme == "BSc Statistics" %}selected{% endif %}>BSc Statistics</option>
+                <option value="MSc Statistics" {% if request.GET.programme == "MSc Statistics" %}selected{% endif %}>MSc Statistics</option>
+                <option value="BSc Zoology" {% if request.GET.programme == "BSc Zoology" %}selected{% endif %}>BSc Zoology</option>
+                <option value="BSc Polymer Chemistry" {% if request.GET.programme == "BSc Polymer Chemistry" %}selected{% endif %}>BSc Polymer Chemistry</option>
+                <option value="BSc Physics" {% if request.GET.programme == "BSc Physics" %}selected{% endif %}>BSc Physics</option>
+              </optgroup>
+      
+              <optgroup label="Arts">
+                <option value="BA History" {% if request.GET.programme == "BA History" %}selected{% endif %}>BA History</option>
+                <option value="MA History" {% if request.GET.programme == "MA History" %}selected{% endif %}>MA History</option>
+                <option value="BA Malayalam" {% if request.GET.programme == "BA Malayalam" %}selected{% endif %}>BA Malayalam</option>
+                <option value="MA English" {% if request.GET.programme == "MA English" %}selected{% endif %}>MA English</option>
+                <option value="BA Economics" {% if request.GET.programme == "BA Economics" %}selected{% endif %}>BA Economics</option>
+              </optgroup>
+      
+              <optgroup label="Commerce">
+                <option value="MCom" {% if request.GET.programme == "MCom" %}selected{% endif %}>MCom</option>
+                <option value="BCom" {% if request.GET.programme == "BCom" %}selected{% endif %}>BCom</option>
+              </optgroup>
+            </select>
+          </div>
+      
           <div class="col-md-2">
             <label class="form-label fw-bold">Graduation Year</label>
             <select name="graduation_year" class="form-select">
               <option value="">All Years</option>
               {% for y in graduation_years %}
-                <option value="{{ y }}"
-                  {% if request.GET.graduation_year == y|stringformat:"s" %}selected{% endif %}>
+                <option value="{{ y }}" {% if request.GET.graduation_year == y|stringformat:"s" %}selected{% endif %}>
                   {{ y }}
                 </option>
               {% endfor %}
             </select>
           </div>
-
+      
+          <div class="col-md-2">
+            <label class="form-label fw-bold">Admission Year</label>
+            <select name="admission_year" class="form-select">
+              <option value="">All Years</option>
+              {% for y in admission_years %}
+                <option value="{{ y }}" {% if request.GET.admission_year == y|stringformat:"s" %}selected{% endif %}>
+                  {{ y }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+      
+          <div class="col-md-2">
+            <label class="form-label fw-bold">Gender</label>
+            <select name="gender" class="form-select">
+              <option value="">All</option>
+              {% for val, label in gender_choices %}
+                <option value="{{ val }}" {% if request.GET.gender == val %}selected{% endif %}>
+                  {{ label }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+      
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Job Status</label>
+            <select name="job_status" class="form-select">
+              <option value="">All</option>
+              {% for val, label in job_status_choices %}
+                <option value="{{ val }}" {% if request.GET.job_status == val %}selected{% endif %}>
+                  {{ label }}
+                </option>
+              {% endfor %}
+            </select>
+          </div>
+      
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Company</label>
+            <input type="text" name="company" class="form-control"
+                   value="{{ request.GET.company }}"
+                   placeholder="Company">
+          </div>
+      
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Job Role</label>
+            <input type="text" name="job_title" class="form-control"
+                   value="{{ request.GET.job_title }}"
+                   placeholder="Job Role">
+          </div>
+      
+          <div class="col-md-3">
+            <label class="form-label fw-bold">Location</label>
+            <input type="text" name="location" class="form-control"
+                   value="{{ request.GET.location }}"
+                   placeholder="Location">
+          </div>
+      
+          <div class="col-md-2">
+            <label class="form-label fw-bold">Salary</label>
+            <select name="salary_range" class="form-select">
+              <option value="">All</option>
+              <option value="low" {% if request.GET.salary_range == "low" %}selected{% endif %}>Below 5 LPA</option>
+              <option value="mid" {% if request.GET.salary_range == "mid" %}selected{% endif %}>5–10 LPA</option>
+              <option value="high" {% if request.GET.salary_range == "high" %}selected{% endif %}>Above 10 LPA</option>
+            </select>
+          </div>
+      
           <div class="col-md-2 d-grid">
             <button type="submit" class="btn btn-dark btn-round">Search</button>
           </div>
+      
+        
 
-        </form>
-
-        {% if filters_applied %}
-          <div class="mt-3">
-            <a href="{% url 'alumni_list' %}" class="btn btn-outline-secondary btn-round">
-              ← Clear Filters
-            </a>
-          </div>
-        {% endif %}
-      </div>
+      {% if filters_applied %}
+        <div class="col-md-2 d-grid">
+          <a href="{% url 'alumni_list' %}" class="btn btn-outline-secondary btn-round">
+            Clear Filters
+          </a>
+        </div>
+      {% endif %}
 
       <!-- TABLE -->
       <div class="table-responsive">

@@ -2,9 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-# -----------------------
-# Department Model
-# -----------------------
+    # -----------------------
+    # Department Model
+    # -----------------------
 class Department(models.Model):
     name = models.CharField(max_length=100)
 
@@ -12,9 +12,9 @@ class Department(models.Model):
         return self.name
 
 
-# -----------------------
-# Programme Model
-# -----------------------
+    # -----------------------
+    # Programme Model
+    # -----------------------
 class Programme(models.Model):
     name = models.CharField(max_length=100)
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
@@ -41,9 +41,9 @@ class Alumni(models.Model):
         ('Higher Studies', 'Higher Studies'),
     )
 
-    # -----------------------------
-    # Personal Info
-    # -----------------------------
+        # -----------------------------
+        # Personal Info
+        # -----------------------------
     name = models.CharField(max_length=100)
     dob = models.DateField(null=True, blank=True)
 
@@ -62,9 +62,9 @@ class Alumni(models.Model):
         blank=True
     )
 
-    # -----------------------------
-    # Educational Info
-    # -----------------------------
+        # -----------------------------
+        # Educational Info
+        # -----------------------------
     department = models.ForeignKey(
         'Department',
         on_delete=models.CASCADE,
@@ -83,9 +83,9 @@ class Alumni(models.Model):
 
     graduation_year = models.IntegerField()
 
-    # -----------------------------
-    # Placement Info
-    # -----------------------------
+        # -----------------------------
+        # Placement Info
+        # -----------------------------
     job_title = models.CharField(
         max_length=100,
         null=True,
@@ -123,9 +123,9 @@ class Alumni(models.Model):
         blank=True
     )
 
-    # -----------------------------
-    # Documents
-    # -----------------------------
+        # -----------------------------
+        # Documents
+        # -----------------------------
     photo = models.ImageField(
         upload_to='photos/',
         null=True,
@@ -138,15 +138,15 @@ class Alumni(models.Model):
         blank=True
     )
 
-    # -----------------------------
-    # System Fields
-    # -----------------------------
+        # -----------------------------
+        # System Fields
+        # -----------------------------
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
 
-    # -----------------------------
-    # Model Options
-    # -----------------------------
+        # -----------------------------
+        # Model Options
+        # -----------------------------
     class Meta:
         ordering = ['-graduation_year', 'name']
         verbose_name = "Alumni"
@@ -155,9 +155,9 @@ class Alumni(models.Model):
     def __str__(self):
         return f"{self.name} ({self.graduation_year})"
 
-# -----------------------
-# Success Story
-# -----------------------
+    # -----------------------
+    # Success Story
+    # -----------------------
 class SuccessStory(models.Model):
     alumni = models.ForeignKey(Alumni, on_delete=models.CASCADE)
     story = models.TextField()
@@ -167,9 +167,9 @@ class SuccessStory(models.Model):
         return self.alumni.name
 
 
-# -----------------------
-# Teacher Model
-# -----------------------
+    # -----------------------
+    # Teacher Model
+    # -----------------------
 class Teacher(models.Model):
 
     ROLE_CHOICES = (
@@ -185,15 +185,15 @@ class Teacher(models.Model):
         return self.user.username
 
 
-# -----------------------
-# Notification Model
-# -----------------------
-# -----------------------
-# Notification Model
-# -----------------------
-# -----------------------
-# Notification Model
-# -----------------------
+    # -----------------------
+    # Notification Model
+    # -----------------------
+    # -----------------------
+    # Notification Model
+    # -----------------------
+    # -----------------------
+    # Notification Model
+    # -----------------------
 class Notification(models.Model):
 
     NOTIFICATION_TYPES = (
@@ -222,4 +222,4 @@ class Notification(models.Model):
 from django.db import models
 
 
- 
+    

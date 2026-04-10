@@ -30,14 +30,15 @@
       flex-direction:column;
     }
 
-    /* Header */
+    /* HEADER */
     .top-header{
       background: linear-gradient(to right, var(--dark-1), var(--dark-2));
       color:#fff;
       padding:18px 0;
       box-shadow: 0 10px 25px rgba(0,0,0,0.15);
     }
-    .top-header .wrap{
+
+    .wrap{
       max-width:1200px;
       margin:0 auto;
       padding:0 20px;
@@ -46,24 +47,27 @@
       justify-content:space-between;
       gap:16px;
     }
+
     .brand{
       display:flex;
       align-items:center;
       gap:10px;
     }
-    .brand .logo{
+
+    .logo{
       width:38px; height:38px;
       display:grid; place-items:center;
       border-radius:12px;
       background: rgba(255,255,255,0.1);
       border: 1px solid rgba(255,255,255,0.15);
     }
+
     .brand h1{
       font-size:20px;
       font-weight:800;
-      letter-spacing:-0.02em;
       margin:0;
     }
+
     .role-pill{
       font-size:12px;
       padding:6px 10px;
@@ -71,26 +75,20 @@
       background: rgba(255,255,255,0.10);
       border: 1px solid rgba(255,255,255,0.15);
       color:#e2e8f0;
-      white-space:nowrap;
     }
 
-    /* Navbar */
+    /* NAVBAR */
     .nav-shell{
       position: sticky;
       top:0;
-      z-index: 100;
-      background: rgba(255,255,255,0.8);
+      z-index:100;
+      background: rgba(255,255,255,0.9);
       backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(15,23,42,0.08);
+      border-bottom:1px solid rgba(0,0,0,0.05);
     }
+
     .nav-shell .wrap{
-      max-width:1200px;
-      margin:0 auto;
       padding:12px 20px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:14px;
       flex-wrap:wrap;
     }
 
@@ -102,29 +100,26 @@
     }
 
     .nav-btn{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
       padding:10px 14px;
-      border-radius:12px;
-      font-weight:700;
+      border-radius:10px;
+      font-weight:600;
       text-decoration:none;
-      border: 1px solid rgba(15,23,42,0.10);
-      transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+      border:1px solid #e5e7eb;
       background:#fff;
-      color: var(--dark-1);
+      color:#111827;
+      transition:0.2s;
     }
+
     .nav-btn:hover{
-      transform: translateY(-1px);
-      box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+      transform:translateY(-1px);
+      box-shadow:0 6px 15px rgba(0,0,0,0.08);
     }
 
-    .nav-btn.primary{ background: var(--primary); color:#fff; border-color: transparent; }
-    .nav-btn.purple{ background: var(--purple); color:#fff; border-color: transparent; }
-    .nav-btn.dark{ background: var(--slate); color:#fff; border-color: transparent; }
-    .nav-btn.danger{ background: var(--danger); color:#fff; border-color: transparent; }
+    .primary{ background:var(--primary); color:#fff; border:none; }
+    .purple{ background:var(--purple); color:#fff; border:none; }
+    .danger{ background:var(--danger); color:#fff; border:none; }
+    .dark{ background:var(--slate); color:#fff; border:none; }
 
-    /* Main */
     main{
       flex:1;
       max-width:1200px;
@@ -133,104 +128,110 @@
       width:100%;
     }
 
-    /* Footer */
     footer{
       margin-top:auto;
       background: linear-gradient(to right, var(--dark-1), var(--dark-2));
       color:#cbd5e1;
       padding:20px 0;
     }
+
     footer .wrap{
-      max-width:1200px;
-      margin:0 auto;
-      padding:0 20px;
-      display:flex;
-      align-items:center;
       justify-content:space-between;
-      gap:10px;
-      flex-wrap:wrap;
     }
-    .footer-small{ font-size:13px; color:#94a3b8; }
   </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <header class="top-header">
-    <div class="wrap">
-      <div class="brand">
-        <div class="logo">
-          <!-- simple cap icon -->
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
-            <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
-          </svg>
-        </div>
-        <h1>PlaceNotify Connect</h1>
+<!-- HEADER -->
+<header class="top-header">
+  <div class="wrap">
+    <div class="brand">
+      <div class="logo">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+          <path d="M22 10v6M2 10l10-5 10 5-10 5z"></path>
+          <path d="M6 12v5c3 3 9 3 12 0v-5"></path>
+        </svg>
       </div>
+      <h1>PlaceNotify Connect</h1>
+    </div>
 
+    {% if user.is_authenticated and user.teacher %}
+      <div class="role-pill">
+        {{ user.teacher.role }} • {{ user.teacher.department.name }}
+      </div>
+    {% endif %}
+  </div>
+</header>
+
+<!-- NAVBAR -->
+<div class="nav-shell">
+  <div class="wrap">
+
+    <div class="nav-left">
+
+      <!-- 🏠 HOME -->
+      <a href="/" class="nav-btn">🏠 Home</a>
+
+      <!-- 📊 DASHBOARD (FIX ADDED HERE) -->
       {% if user.is_authenticated and user.teacher %}
-        <div class="role-pill">
-          {{ user.teacher.role }} • {{ user.teacher.department.name }}
-        </div>
+        {% if user.teacher.role == "HOD" %}
+          <a href="{% url 'hod_dashboard' %}" class="nav-btn primary">📊 Dashboard</a>
+        {% elif user.teacher.role == "TEACHER" %}
+          <a href="{% url 'teacher_dashboard' %}" class="nav-btn primary">📊 Dashboard</a>
+        {% endif %}
+      {% endif %}
+
+      <!-- 👥 ALUMNI -->
+      {% if user.teacher.role == "HOD" %}
+        <a href="{% url 'alumni_list' %}" class="nav-btn">👥 Alumni</a>
+      {% endif %}
+
+      <!-- 🔔 NOTIFICATIONS -->
+      <a href="{% url 'notifications' %}" class="nav-btn">🔔 Notifications</a>
+
+      <!-- ➕ ROLE ACTIONS -->
+      {% if user.is_authenticated and user.teacher %}
+
+        {% if user.teacher.role == "HOD" %}
+          <a href="{% url 'add_alumni' %}" class="nav-btn primary">➕ Add Alumni</a>
+        {% endif %}
+
+        {% if user.teacher.role == "TEACHER" %}
+          <a href="{% url 'add_notification' %}" class="nav-btn purple">➕ Add Notification</a>
+        {% endif %}
+
+      {% endif %}
+
+    </div>
+
+    <!-- RIGHT -->
+    <div class="nav-right">
+      {% if user.is_authenticated %}
+        <form method="post" action="{% url 'logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="nav-btn danger">🚪 Logout</button>
+        </form>
       {% else %}
-        <div class="role-pill">
-          Student View • Public Access
-        </div>
+        <a href="{% url 'login' %}" class="nav-btn dark">🔐 Login</a>
       {% endif %}
     </div>
-  </header>
 
-  <!-- NAV -->
-  <div class="nav-shell">
-    <div class="wrap">
-
-      <div class="nav-left">
-        <a href="/" class="nav-btn">🏠 Home</a>
-        <a href="{% url 'alumni_list' %}" class="nav-btn">👥 Alumni</a>
-        <a href="{% url 'notifications' %}" class="nav-btn">🔔 Notifications</a>
-
-        {% if user.is_authenticated and user.teacher %}
-
-          {% if user.teacher.role == "HOD" %}
-            <a href="{% url 'add_alumni' %}" class="nav-btn primary">➕ Add Alumni</a>
-          {% endif %}
-
-          {% if user.teacher.role == "TEACHER" %}
-            <a href="{% url 'add_notification' %}" class="nav-btn purple">➕ Add Notification</a>
-          {% endif %}
-        {% endif %}
-      </div>
-
-      <div class="nav-right">
-        {% if user.is_authenticated %}
-          <form method="post" action="{% url 'logout' %}" style="margin:0;">
-            {% csrf_token %}
-            <button type="submit" class="nav-btn danger" style="border:none;">
-              🚪 Logout
-            </button>
-          </form>
-        {% else %}
-          <a href="{% url 'login' %}" class="nav-btn dark">🔐 Login</a>
-        {% endif %}
-      </div>
-
-    </div>
   </div>
+</div>
 
-  <!-- CONTENT -->
-  <main>
-    {% block content %}{% endblock %}
-  </main>
+<!-- CONTENT -->
+<main>
+  {% block content %}{% endblock %}
+</main>
 
-  <!-- FOOTER -->
-  <footer>
-    <div class="wrap">
-      <div>© 2026 Alumni Placement System</div>
-      <div class="footer-small">Built with Django • Bootstrap</div>
-    </div>
-  </footer>
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div>© 2026 Alumni Placement System</div>
+    <div>Built with Django • Bootstrap</div>
+  </div>
+</footer>
 
 </body>
 </html>

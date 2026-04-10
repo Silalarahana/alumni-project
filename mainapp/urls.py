@@ -25,5 +25,5 @@ urlpatterns = [
     path('notification/edit/<int:pk>/', views.edit_notification, name='edit_notification'),
     path('notification/delete/<int:pk>/', views.delete_notification, name='delete_notification'),
     path('about-portal/', views.about_portal, name='about_portal'),
-
+    path('export-alumni/', views.export_alumni_csv, name='export_alumni_csv'),
 ]

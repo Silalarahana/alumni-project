@@ -327,10 +327,13 @@ def add_alumni(request):
         phone = request.POST.get("phone", "").strip() or None
 
         department_id = request.POST.get("department")
-        programme_id = request.POST.get("programme") or None
+        programme_id = request.POST.get("programme")
+
+        programme = None
+        if programme_id:
+            programme = get_object_or_404(Programme, id=int(programme_id))
         admission_year = request.POST.get("admission_year") or None
         graduation_year = request.POST.get("graduation_year") or None
-
         job_title = request.POST.get("job_title", "").strip() or None
         company_name = request.POST.get("company_name", "").strip() or None
         placement_year = request.POST.get("placement_year") or None
@@ -355,8 +358,7 @@ def add_alumni(request):
             return redirect("add_alumni")
 
         department = get_object_or_404(Department, id=department_id)
-        programme = Programme.objects.filter(id=programme_id).first() if programme_id else None
-
+        
         Alumni.objects.create(
             name=name,
             dob=dob,

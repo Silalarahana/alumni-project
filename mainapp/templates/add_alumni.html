@@ -69,14 +69,70 @@
           <!-- NEW -->
           <div class="col-md-6">
             <label class="form-label fw-semibold">Programme</label>
-            <select name="programme" class="form-select">
-              <option value="">Select Programme</option>
-              <option value="B.Tech">B.Tech</option>
-              <option value="M.Tech">M.Tech</option>
-              <option value="MBA">MBA</option>
-              <option value="MCA">MCA</option>
-              <option value="B.Sc">B.Sc</option>
-            </select>
+            <select name="programme" class="form-select" required>
+            <option value="">All Programmes</option>
+
+            <optgroup label="Science">
+              {% for p in programmes %}
+                {% if p.name == "MSc Integrated Computer Science" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Plant Science" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Mathematics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Statistics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "MSc Statistics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Zoology" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Polymer Chemistry" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Physics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+              {% endfor %}
+            </optgroup>
+
+            <optgroup label="Arts">
+              {% for p in programmes %}
+                {% if p.name == "BA History" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "MA History" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BA Malayalam" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "MA English" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BA Economics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+              {% endfor %}
+            </optgroup>
+
+            <optgroup label="Commerce">
+              {% for p in programmes %}
+                {% if p.name == "MCom" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BCom" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+              {% endfor %}
+            </optgroup>
+
+          </select>
           </div>
 
           <!-- NEW -->

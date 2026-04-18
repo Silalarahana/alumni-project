@@ -1,0 +1,221 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+body{
+  background:#f4f6f9;
+  font-family:'Segoe UI', sans-serif;
+}
+
+.dash-wrap{
+  max-width:1200px;
+  margin:auto;
+}
+
+.hero{
+  padding:20px 25px;
+  border-radius:12px;
+  background:#ffffff;
+  border:1px solid #e5e7eb;
+  margin-bottom:20px;
+}
+
+.hero h2{
+  font-size:22px;
+  font-weight:700;
+}
+
+.hero p{
+  color:#6b7280;
+  font-size:14px;
+}
+
+.stat-box{
+  background:#fff;
+  padding:18px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+}
+
+.stat-number{
+  font-size:24px;
+  font-weight:800;
+}
+
+.stat-label{
+  color:#6b7280;
+  font-size:13px;
+}
+
+.cardx{
+  background:#fff;
+  padding:20px;
+  border-radius:12px;
+  border:1px solid #e5e7eb;
+}
+
+.recent-item{
+  padding:12px;
+  border:1px solid #e5e7eb;
+  border-radius:8px;
+  margin-bottom:10px;
+}
+</style>
+
+<div class="container mt-4 dash-wrap">
+
+  <!-- HERO -->
+  <div class="hero">
+    <h2>Dashboard</h2>
+    <p>
+      Welcome, {{ request.user.username }} • 
+      {{ user.teacher.role }} • 
+      {{ user.teacher.department.name }}
+    </p>
+  </div>
+
+  <!-- STATS -->
+  <div class="row g-3 mb-4">
+
+    <div class="col-md-4">
+      <div class="stat-box">
+        <div class="stat-number">{{ alumni_count }}</div>
+        <div class="stat-label">Total Alumni</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="stat-box">
+        <div class="stat-number">{{ notification_count }}</div>
+        <div class="stat-label">Notifications</div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="stat-box">
+        <div class="stat-number">{{ recent_count }}</div>
+        <div class="stat-label">Recent Posts</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 📊 CHARTS -->
+  {% if user.teacher.role == "HOD" %}
+  <div class="row g-3 mb-4">
+  
+    <div class="col-md-6">
+      <div class="cardx">
+        <h5>Placement Trend (Year-wise)</h5>
+        <canvas id="yearChart"></canvas>
+      </div>
+    </div>
+  
+    <div class="col-md-6">
+      <div class="cardx">
+        <h5>Salary Distribution</h5>
+        <canvas id="salaryChart"></canvas>
+      </div>
+    </div>
+  
+  </div>
+  {% endif %}
+  <!-- ACTIONS -->
+  <div class="row g-3 mb-4">
+
+    {% if user.teacher.role == "HOD" %}
+    <div class="col-md-6">
+      <div class="cardx">
+        <h5>Alumni Management</h5>
+    
+        <a href="{% url 'alumni_list' %}" class="btn btn-primary w-100 mb-2">
+          View Alumni
+        </a>
+    
+        <a href="{% url 'add_alumni' %}" class="btn btn-success w-100">
+          Add Alumni
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="col-md-6">
+      <div class="cardx">
+        <h5>Notifications</h5>
+    
+        <a href="{% url 'notifications' %}" class="btn btn-dark w-100">
+          View Notifications
+        </a>
+    
+        {% if user.teacher.role == "TEACHER" %}
+        <a href="{% url 'add_notification' %}" class="btn btn-outline-dark w-100 mt-2">
+          + Add Notification
+        </a>
+        {% endif %}
+    
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RECENT -->
+  <div class="cardx">
+    <h5 class="mb-3">Recent Notifications</h5>
+
+    {% for n in recent_notifications %}
+      <div class="recent-item">
+        <strong>{{ n.title }}</strong><br>
+        <small class="text-muted">
+          {{ n.created_at|date:"M d, Y - h:i A" }}
+        </small>
+      </div>
+    {% empty %}
+      <p class="text-muted">No recent notifications</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+<!-- ✅ CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+
+  const yearLabels = {{ year_labels|safe }};
+  const yearData = {{ year_data|safe }};
+
+  const salaryLabels = {{ salary_labels|safe }};
+  const salaryData = {{ salary_data|safe }};
+
+  // 📊 LINE CHART
+  new Chart(document.getElementById('yearChart'), {
+      type: 'line',
+      data: {
+          labels: yearLabels,
+          datasets: [{
+              label: 'Alumni Trend',
+              data: yearData,
+              tension: 0.4,
+              fill: true
+          }]
+      }
+  });
+
+  // 🥧 PIE CHART
+  new Chart(document.getElementById('salaryChart'), {
+      type: 'doughnut',
+      data: {
+          labels: salaryLabels,
+          datasets: [{
+              data: salaryData
+          }]
+      }
+  });
+
+});
+</script>
+
+{% endblock %}

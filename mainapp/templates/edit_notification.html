@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}Edit Notification{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4" style="max-width: 800px;">
+
+  <div class="card shadow-sm border-0">
+    
+    <div class="card-header text-white" style="background:#1f2937;">
+      <h4 class="mb-0">Edit Placement Notification</h4>
+    </div>
+
+    <div class="card-body">
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <!-- Title -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Notification Title</label>
+          <input type="text" name="title" class="form-control"
+                 value="{{ notification.title }}" required>
+        </div>
+
+        <!-- Notification Type -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Notification Type</label>
+          <select name="notification_type" class="form-select" required>
+
+            <option value="career" {% if notification.notification_type == "career" %}selected{% endif %}>
+              Career Guidance
+            </option>
+
+            <option value="exam" {% if notification.notification_type == "exam" %}selected{% endif %}>
+              Exams
+            </option>
+
+            <option value="job" {% if notification.notification_type == "job" %}selected{% endif %}>
+              Job Opportunity
+            </option>
+
+            <option value="workshop" {% if notification.notification_type == "workshop" %}selected{% endif %}>
+              Workshops
+            </option>
+
+          </select>
+        </div>
+
+        <!-- Message -->
+        <div class="mb-4">
+          <label class="form-label fw-semibold">Notification Message</label>
+          <textarea name="message" class="form-control" rows="5" required>{{ notification.message }}</textarea>
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex justify-content-end gap-2">
+
+          <a href="{% url 'notifications' %}" class="btn btn-outline-secondary">
+            Cancel
+          </a>
+
+          <button type="submit" class="btn btn-success px-4">
+            Update Notification
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+</div>
+
+{% endblock %}

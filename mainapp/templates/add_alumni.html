@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block title %}Add Alumni{% endblock %}
+
+{% block content %}
+<div class="container mt-4" style="max-width: 900px;">
+  <div class="card shadow-sm border-0">
+    <div class="card-header text-white" style="background:#1f2937;">
+      <h4 class="mb-0">Add Alumni Student Details</h4>
+    </div>
+
+    <div class="card-body">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <!-- PERSONAL -->
+        <h5 class="mb-3">Personal Information</h5>
+        <div class="row g-3 mb-4">
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Name</label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" name="email" class="form-control">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Phone</label>
+            <input type="text" name="phone" class="form-control">
+          </div>
+
+          <!-- NEW -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Date of Birth</label>
+            <input type="date" name="dob" class="form-control">
+          </div>
+
+          <!-- NEW -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Gender</label>
+            <select name="gender" class="form-select">
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <!-- EDUCATION -->
+        <h5 class="mb-3">Educational Details</h5>
+        <div class="row g-3 mb-4">
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Department</label>
+            <select name="department" class="form-select" required>
+              <option value="">Select Department</option>
+              {% for dept in departments %}
+                <option value="{{ dept.id }}">{{ dept.name }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <!-- NEW -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Programme</label>
+            <select name="programme" class="form-select" required>
+            <option value="">All Programmes</option>
+
+            <optgroup label="Science">
+              {% for p in programmes %}
+                {% if p.name == "MSc Integrated Computer Science" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Plant Science" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Mathematics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Statistics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "MSc Statistics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Zoology" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Polymer Chemistry" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BSc Physics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+              {% endfor %}
+            </optgroup>
+
+            <optgroup label="Arts">
+              {% for p in programmes %}
+                {% if p.name == "BA History" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "MA History" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BA Malayalam" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "MA English" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BA Economics" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+              {% endfor %}
+            </optgroup>
+
+            <optgroup label="Commerce">
+              {% for p in programmes %}
+                {% if p.name == "MCom" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+                {% if p.name == "BCom" %}
+                  <option value="{{ p.id }}">{{ p.name }}</option>
+                {% endif %}
+              {% endfor %}
+            </optgroup>
+
+          </select>
+          </div>
+
+          <!-- NEW -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Admission Year</label>
+            <input type="number" name="admission_year" class="form-control" placeholder="e.g. 2021">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Graduation Year</label>
+            <input type="number" name="graduation_year" class="form-control" required>
+          </div>
+
+        </div>
+        
+
+        <hr class="my-4">
+
+        <!-- PLACEMENT -->
+        <h5 class="mb-3">Placement Details</h5>
+        <div class="row g-3 mb-4">
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Job Title</label>
+            <input type="text" name="job_title" class="form-control">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Company Name</label>
+            <input type="text" name="company_name" class="form-control">
+          </div>
+
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Location</label>
+            <input type="text" name="location" class="form-control">
+          </div>
+
+          <!-- NEW -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Placement Year</label>
+            <input type="number" name="placement_year" class="form-control" placeholder="e.g. 2025">
+          </div>
+
+          <!-- NEW -->
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">Salary (LPA)</label>
+            <input type="number" step="0.01" name="salary" class="form-control" placeholder="e.g. 6.50">
+          </div>
+
+          <div class="col-md-6">
+          <label class="form-label fw-semibold">Job Status</label>
+          <select name="job_status" class="form-select" required>
+            <option value="">Select Status</option>
+            <option value="Placed">Placed</option>
+            <option value="Promoted">Promoted</option>
+            <option value="Resigned">Resigned</option>
+            <option value="Higher Studies">Higher Studies</option>
+          </select>
+        </div>
+
+        </div>
+
+        <hr class="my-4">
+
+        <!-- PHOTO -->
+        <h5 class="mb-3">Upload</h5>
+        <div class="row g-3 mb-4">
+          <div class="col-md-12">
+            <label class="form-label fw-semibold">Upload Photo</label>
+            <input type="file" name="photo" class="form-control">
+          </div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="d-flex justify-content-end gap-2">
+          <a href="{% url 'alumni_list' %}" class="btn btn-outline-secondary">Cancel</a>
+          <button type="submit" class="btn btn-success px-4">Save Alumni Record</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+  {% endblock %}
+</div>

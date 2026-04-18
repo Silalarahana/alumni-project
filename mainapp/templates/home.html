@@ -1,0 +1,731 @@
+{% extends "base.html" %}
+{% block title %}Home | PlaceNotify Connect{% endblock %}
+
+{% block content %}
+<style>
+  .landing-wrap{
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 12px;
+  }
+
+  .section-space{ margin-top: 42px; }
+
+  .section-title{
+    font-size: 34px;
+    font-weight: 900;
+    color: #0f172a;
+    letter-spacing: -0.03em;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+
+  .section-subtitle{
+    text-align: center;
+    color: #475569;
+    max-width: 860px;
+    margin: 0 auto 24px;
+    line-height: 1.7;
+    font-size: 15px;
+  }
+
+  /* HERO */
+  .hero-lpu{
+    position: relative;
+    overflow: hidden;
+    border-radius: 24px;
+    padding: 60px 36px;
+    background:
+      radial-gradient(circle at top left, rgba(37,99,235,0.25), transparent 35%),
+      radial-gradient(circle at top right, rgba(147,51,234,0.20), transparent 30%),
+      linear-gradient(135deg, #0f172a 0%, #1e293b 45%, #2563eb 100%);
+    color: #fff;
+    box-shadow: 0 24px 60px rgba(2, 6, 23, 0.18);
+  }
+
+  .hero-lpu::before{
+    content: "";
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    right: -100px;
+    top: -70px;
+  }
+
+  .hero-lpu::after{
+    content: "";
+    position: absolute;
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+    left: -60px;
+    bottom: -90px;
+  }
+
+  .hero-badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.18);
+    font-size: 13px;
+    font-weight: 800;
+    margin-bottom: 18px;
+  }
+
+  .hero-lpu h1{
+    font-size: 46px;
+    line-height: 1.1;
+    font-weight: 950;
+    letter-spacing: -0.04em;
+    max-width: 760px;
+    margin-bottom: 16px;
+  }
+
+  .hero-lpu p{
+    font-size: 17px;
+    line-height: 1.8;
+    max-width: 780px;
+    color: rgba(255,255,255,0.90);
+    margin-bottom: 24px;
+  }
+
+  .hero-btns{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .hero-btns .btn{
+    border-radius: 14px;
+    padding: 11px 18px;
+    font-weight: 900;
+  }
+
+  .hero-mini-stats{
+    margin-top: 28px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+
+  .mini-stat{
+    background: rgba(255,255,255,0.10);
+    border: 1px solid rgba(255,255,255,0.16);
+    border-radius: 16px;
+    padding: 16px;
+    backdrop-filter: blur(6px);
+  }
+
+  .mini-stat .num{
+    font-size: 28px;
+    font-weight: 950;
+    margin-bottom: 4px;
+  }
+
+  .mini-stat .text{
+    font-size: 13px;
+    color: rgba(255,255,255,0.84);
+    font-weight: 700;
+  }
+
+  .highlight-grid{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+  }
+  
+  .highlight-card{
+    background: #fff;
+    border-radius: 20px;
+    padding: 22px;
+    border: 1px solid rgba(15,23,42,0.07);
+    box-shadow: 0 12px 26px rgba(2,6,23,0.05);
+    text-align: center;
+    width: 100%;
+    min-width: 0;
+  }
+  
+  .highlight-card .num{
+    font-size: 34px;
+    font-weight: 950;
+    color: #0f172a;
+    line-height: 1.1;
+  }
+  
+  .highlight-card .label{
+    margin-top: 8px;
+    color: #475569;
+    font-weight: 800;
+    font-size: 14px;
+  }
+  /* RECRUITERS */
+  .logo-grid{
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+  }
+
+  .logo-card{
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 18px;
+    text-align: center;
+    font-weight: 900;
+    color: #0f172a;
+    box-shadow: 0 10px 22px rgba(2,6,23,0.05);
+  }
+
+  .logo-card small{
+    display: block;
+    margin-top: 6px;
+    color: #64748b;
+    font-weight: 700;
+  }
+
+  /* FEATURE BLOCKS */
+  .feature-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .feature-card{
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 10px 24px rgba(2,6,23,0.05);
+    height: 100%;
+  }
+
+  .feature-card h5{
+    font-weight: 900;
+    color: #0f172a;
+    margin-bottom: 10px;
+  }
+
+  .feature-card p{
+    margin: 0;
+    color: #475569;
+    line-height: 1.7;
+  }
+
+  /* SUCCESS STORIES */
+  .story-grid{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .story-card{
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 12px 28px rgba(2,6,23,0.05);
+    height: 100%;
+  }
+
+  .story-top{
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    padding: 18px;
+  }
+
+  .story-top .pkg{
+    font-size: 24px;
+    font-weight: 950;
+    margin: 0;
+  }
+
+  .story-top .name{
+    font-size: 16px;
+    font-weight: 900;
+    margin-top: 6px;
+  }
+
+  .story-body{
+    padding: 18px;
+    color: #475569;
+    line-height: 1.7;
+    font-size: 14px;
+  }
+
+  /* PANEL */
+  .panel{
+    background: #fff;
+    border: 1px solid rgba(15,23,42,0.08);
+    border-radius: 20px;
+    box-shadow: 0 12px 28px rgba(2,6,23,0.05);
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .panel-head{
+    padding: 16px 20px;
+    border-bottom: 1px solid #e2e8f0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(180deg, #ffffff, #f8fafc);
+  }
+
+  .panel-head h5{
+    margin: 0;
+    font-weight: 950;
+    color: #0f172a;
+  }
+
+  .panel-body{ padding: 18px 20px; }
+
+  .table thead th{
+    background: #f8fafc;
+    color: #0f172a;
+    font-weight: 950;
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .action-btn{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: 16px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    text-decoration: none;
+    color: #0f172a;
+    font-weight: 900;
+    transition: .18s ease;
+  }
+
+  .action-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 12px 24px rgba(2,6,23,0.06);
+    background: #eef2ff;
+  }
+
+  .action-btn small{
+    display: block;
+    color: #64748b;
+    font-weight: 700;
+    margin-top: 3px;
+  }
+
+  .cta-band{
+    margin-top: 42px;
+    border-radius: 24px;
+    padding: 34px 26px;
+    text-align: center;
+    color: white;
+    background: linear-gradient(135deg, #1d4ed8, #7c3aed);
+    box-shadow: 0 18px 40px rgba(37,99,235,0.22);
+  }
+
+  .cta-band h3{
+    font-weight: 950;
+    margin-bottom: 10px;
+  }
+
+  .cta-band p{
+    margin: 0 auto 18px;
+    max-width: 720px;
+    color: rgba(255,255,255,.90);
+  }
+
+  @media (max-width: 991px){
+    .hero-mini-stats,
+    .highlight-grid,
+    .feature-grid,
+    .story-grid,
+    .logo-grid{
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .hero-lpu h1{
+      font-size: 36px;
+    }
+  }
+
+
+  @media (max-width: 576px){
+    .hero-mini-stats,
+    .highlight-grid,
+    .feature-grid,
+    .story-grid,
+    .logo-grid{
+      grid-template-columns: 1fr;
+    }
+
+    .hero-lpu{
+      padding: 36px 20px;
+    }
+
+    .hero-lpu h1{
+      font-size: 30px;
+    }
+    .hero-btns {
+      margin-top: 10px;
+    }
+
+  }
+  .programme-grid{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:16px;
+  }
+  
+  .programme-card{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:12px;
+    padding:14px;
+    text-align:center;
+    font-weight:700;
+    color:#0f172a;
+    transition:0.2s;
+  }
+  
+  .programme-card:hover{
+    background:#eef2ff;
+    transform:translateY(-3px);
+    box-shadow:0 8px 18px rgba(0,0,0,0.08);
+  }
+</style>
+
+<div class="landing-wrap">
+
+  <!-- HERO -->
+<!-- HERO -->
+<section class="hero-lpu mt-3">
+
+  <div class="hero-badge">
+    🚀 Official Placement & Alumni Platform
+    {% if teacher %}
+      • {{ teacher.role }} • {{ teacher.department.name }}
+    {% else %}
+      • Public Access Portal
+    {% endif %}
+  </div>
+
+  <h1>PlaceNotify Connect</h1>
+
+  <h2 style="
+      font-size: 22px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.85);
+      margin-bottom: 14px;
+  ">
+    Smart Placement Tracking & Student Success Platform
+  </h2>
+
+  <p>
+    A centralized platform to track placements, highlight student achievements,
+    and provide departments with meaningful insights.
+  </p>
+
+  <div class="hero-btns">
+
+    {% if user.is_authenticated %}
+      <a href="{% url 'hod_dashboard' %}" class="btn btn-light">
+        Go to Dashboard
+      </a>
+    {% else %}
+      <a href="{% url 'login' %}" class="btn btn-light">
+        Login to Continue
+      </a>
+    {% endif %}
+
+    <a href="{% url 'about_portal' %}" class="btn btn-outline-light">
+      Learn More
+    </a>
+
+  </div>
+
+</section>
+  <!-- HIGHLIGHTS -->
+  <section class="section-space">
+    <h2 class="section-title">Career Outcomes That Inspire</h2>
+    <p class="section-subtitle">
+      Our student portal highlights real achievements, department-level progress,
+      and placement outcomes that reflect growth, opportunity, and success.
+    </p>
+
+    <div class="highlight-grid">
+
+      <div class="highlight-card">
+        <div class="num">{{ total_alumni }}</div>
+        <div class="label">Total Students</div>
+      </div>
+    
+      <div class="highlight-card">
+        <div class="num">{{ total_recruiters }}</div>
+        <div class="label">Hiring Companies</div>
+      </div>
+    
+      <div class="highlight-card">
+        <div class="num">{{ latest_year|default:"-" }}</div>
+        <div class="label">Latest Batch</div>
+      </div>
+    
+      <div class="highlight-card">
+        <div class="num">{{ recent_alumni|length }}</div>
+        <div class="label">Recent Additions</div>
+      </div>
+    
+    </div>
+    
+    </div>
+  </section>
+
+  <!-- RECRUITERS -->
+  <section class="section-space">
+    <h2 class="section-title">Top Recruiters in Our Student Network</h2>
+    <p class="section-subtitle">
+      Leading organizations continue to recruit and engage with students across departments and programmes.
+    </p>
+
+    <div class="logo-grid">
+      {% for company in recruiter_companies %}
+        <div class="logo-card">
+          {{ company.company_name }}
+          <small>Recruiting student talent</small>
+        </div>
+      {% empty %}
+        <div class="logo-card">Google<small>Example recruiter</small></div>
+        <div class="logo-card">Microsoft<small>Example recruiter</small></div>
+        <div class="logo-card">Amazon<small>Example recruiter</small></div>
+        <div class="logo-card">Infosys<small>Example recruiter</small></div>
+        <div class="logo-card">TCS<small>Example recruiter</small></div>
+      {% endfor %}
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section-space">
+    <h2 class="section-title">Why This Portal Matters</h2>
+    <p class="section-subtitle">
+      Built to strengthen student engagement, improve placement visibility, and support departments with real data.
+    </p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h5>Placement Insights</h5>
+        <p>
+          Track company-wise placements, graduation outcomes, and student career trends in one place.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h5>Department Control</h5>
+        <p>
+          HODs and teachers can manage records, publish updates, and maintain department-level visibility.
+        </p>
+      </div>
+      <div class="feature-card">
+        <h5>Student Success Stories</h5>
+        <p>
+          Showcase inspiring achievements that motivate current students and strengthen institutional branding.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- SUCCESS STORIES -->
+<section class="section-space">
+  <h2 class="section-title">From Campus to Career</h2>
+  <p class="section-subtitle">
+    Student journeys reflect the impact of academic preparation, opportunity, and professional growth.
+  </p>
+
+  <div class="story-grid">
+    {% for story in featured_stories %}
+      <div class="story-card">
+        <div class="story-top">
+          <p class="pkg">
+            {% if story.alumni.salary %}₹{{ story.alumni.salary }}{% else %}Success Story{% endif %}
+          </p>
+          <div class="name">{{ story.alumni.name }}</div>
+        </div>
+        <div class="story-body">
+          {{ story.story|truncatewords:30 }}
+        </div>
+      </div>
+    {% empty %}
+      <div class="story-card">
+        <div class="story-top">
+          <p class="pkg">Outstanding Placement</p>
+          <div class="name">Featured Student</div>
+        </div>
+        <div class="story-body">
+          Add success stories to display inspiring student achievements on the homepage.
+        </div>
+      </div>
+      <div class="story-card">
+        <div class="story-top">
+          <p class="pkg">Career Growth</p>
+          <div class="name">Featured Student</div>
+        </div>
+        <div class="story-body">
+          Showcase students who became professionals, entrepreneurs, or higher-study achievers.
+        </div>
+      </div>
+      <div class="story-card">
+        <div class="story-top">
+          <p class="pkg">Global Opportunities</p>
+          <div class="name">Featured Student</div>
+        </div>
+        <div class="story-body">
+          Use this section like a premium university landing page to build trust and credibility.
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+
+  <!-- RECENT STUDENTS + RECENT NOTIFICATIONS -->
+  <section class="section-space">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="panel">
+          <div class="panel-head">
+            <h5>Recent Students</h5>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Year</th>
+                    <th>Company</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for a in recent_alumni %}
+                    <tr>
+                      <td>
+                        <a class="text-decoration-none fw-bold">
+                          {{ a.name }}
+                        </a>
+                      </td>
+                      <td>{{ a.department.name }}</td>
+                      <td>{{ a.graduation_year }}</td>
+                      <td>{{ a.company_name|default:"-" }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="4" class="text-center text-muted py-4">
+                        No student records available yet.
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="panel">
+          <div class="panel-head">
+            <h5>Recent Notifications</h5>
+            <a href="{% url 'notifications' %}" class="btn btn-sm btn-outline-dark" style="border-radius:12px; font-weight:900;">
+              View All
+            </a>
+          </div>
+          <div class="panel-body">
+            <div class="table-responsive">
+              <table class="table table-hover align-middle mb-0">
+                <thead>
+                  <tr>
+                    <th>Title</th>
+                    <th>Department</th>
+                    <th>Date</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for n in recent_notifications %}
+                    <tr>
+                      <td>
+                        <div class="fw-bold">{{ n.title }}</div>
+                        <small class="text-muted">{{ n.message|truncatewords:8 }}</small>
+                      </td>
+                      <td>{{ n.department.name }}</td>
+                      <td>{{ n.created_at|date:"M d, Y" }}</td>
+                    </tr>
+                  {% empty %}
+                    <tr>
+                      <td colspan="3" class="text-center text-muted py-4">
+                        No notifications available yet.
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK ACTIONS -->
+  <section class="section-space">
+    <div class="panel">
+  
+      <div class="panel-head">
+        <h5>Programmes</h5>
+      </div>
+  
+      <div class="panel-body">
+  
+        <div class="programme-grid">
+  
+          <div class="programme-card">MSc Integrated Computer Science</div>
+          <div class="programme-card">BSc Plant Science</div>
+          <div class="programme-card">BSc Mathematics</div>
+          <div class="programme-card">BSc Statistics</div>
+  
+          <div class="programme-card">MSc Statistics</div>
+          <div class="programme-card">BSc Zoology</div>
+          <div class="programme-card">BSc Polymer Chemistry</div>
+          <div class="programme-card">BSc Physics</div>
+  
+          <div class="programme-card">BA History</div>
+          <div class="programme-card">MA History</div>
+          <div class="programme-card">BA Malayalam</div>
+          <div class="programme-card">MA English</div>
+  
+          <div class="programme-card">BA Economics</div>
+          <div class="programme-card">MCom</div>
+          <div class="programme-card">BCom</div>
+  
+        </div>
+  
+      </div>
+    </div>
+  </section>
+  <!-- CTA -->
+  <section class="cta-band">
+    <h3>Build a stronger student network with better placement visibility</h3>
+    <p>
+      Use this portal to manage student records, celebrate success stories, improve tracking,
+      and create a more professional department experience.
+    </p>
+    <a href="{% url 'about_portal' %}" class="btn btn-light btn-lg" style="border-radius:14px; font-weight:900;">
+      Learn More
+    </a>
+  </section>
+
+</div>
+{% endblock %}

@@ -1,0 +1,307 @@
+{% extends "base.html" %}
+{% block title %}Alumni Details{% endblock %}
+
+{% block content %}
+<style>
+  .profile-wrap{max-width: 980px; margin: 0 auto;}
+  .soft-card{
+    border: 1px solid rgba(15,23,42,0.08);
+    border-radius: 18px;
+    box-shadow: 0 16px 35px rgba(2,6,23,0.08);
+    overflow: hidden;
+    background: #fff;
+  }
+  .head-grad{
+    background:
+      radial-gradient(900px 300px at 10% 0%, rgba(37,99,235,.20), transparent 55%),
+      radial-gradient(900px 300px at 90% 0%, rgba(147,51,234,.16), transparent 55%),
+      linear-gradient(90deg, #0f172a, #1e293b);
+    color:#fff;
+  }
+  .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 10px; border-radius:999px;
+    font-weight: 900; font-size:12px;
+    border: 1px solid rgba(255,255,255,0.25);
+    background: rgba(255,255,255,0.12);
+  }
+  .meta{
+    color: rgba(255,255,255,0.85);
+    font-weight: 700;
+  }
+  .avatar{
+    width: 160px; height: 160px; border-radius: 16px;
+    object-fit: cover;
+    border: 1px solid rgba(15,23,42,0.10);
+    box-shadow: 0 12px 28px rgba(2,6,23,0.10);
+    background:#f1f5f9;
+  }
+  .info-card{
+    border: 1px solid rgba(15,23,42,0.08);
+    border-radius: 16px;
+    padding: 16px;
+    background: #fff;
+  }
+  .info-title{
+    font-weight: 950;
+    color:#0f172a;
+    margin-bottom: 10px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .kv{
+    display:flex; justify-content:space-between; gap:16px;
+    padding: 10px 0;
+    border-bottom: 1px solid #e2e8f0;
+  }
+  .kv:last-child{border-bottom:none;}
+  .k{color:#64748b; font-weight:800;}
+  .v{color:#0f172a; font-weight:900; text-align:right;}
+  .status{
+    padding: 6px 10px; border-radius: 999px;
+    font-weight: 950; font-size: 12px;
+    display:inline-block;
+  }
+  .s-placed{background: rgba(16,185,129,.14); border:1px solid rgba(16,185,129,.25); color:#065f46;}
+  .s-promoted{background: rgba(37,99,235,.14); border:1px solid rgba(37,99,235,.25); color:#1d4ed8;}
+  .s-resigned{background: rgba(220,38,38,.14); border:1px solid rgba(220,38,38,.25); color:#b91c1c;}
+  .s-higher{background: rgba(217,119,6,.14); border:1px solid rgba(217,119,6,.25); color:#b45309;}
+  .muted{color:#94a3b8; font-weight:700;}
+</style>
+
+<div class="container mt-4 profile-wrap">
+
+  <div class="soft-card">
+
+    <!-- HEADER -->
+    <div class="p-4 head-grad d-flex flex-wrap justify-content-between align-items-start gap-3">
+      <div>
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <span class="pill">🎓 Alumni Profile</span>
+
+          {% if alumni.job_status %}
+            {% if alumni.job_status == "Placed" %}
+              <span class="pill">✅ Placed</span>
+            {% elif alumni.job_status == "Promoted" %}
+              <span class="pill">📈 Promoted</span>
+            {% elif alumni.job_status == "Resigned" %}
+              <span class="pill">⚠️ Resigned</span>
+            {% elif alumni.job_status == "Higher Studies" %}
+              <span class="pill">🎯 Higher Studies</span>
+            {% endif %}
+          {% endif %}
+
+          {% if alumni.salary %}
+            <span class="pill">💰 ₹ {{ alumni.salary }} LPA</span>
+          {% endif %}
+        </div>
+
+        <h3 class="fw-bold mb-1">{{ alumni.name }}</h3>
+        <div class="meta">
+          {{ alumni.department }} • {{ alumni.graduation_year }}
+          {% if alumni.programme %} • {{ alumni.programme }}{% endif %}
+          {% if alumni.admission_year %} • Admission: {{ alumni.admission_year }}{% endif %}
+        </div>
+      </div>
+
+      {% if user.is_authenticated and user.teacher %}
+      <div class="d-flex gap-2">
+        <a href="{% url 'edit_alumni' alumni.id %}" class="btn btn-light btn-sm fw-bold" style="border-radius:12px;">
+          Edit
+        </a>
+
+        {% if user.teacher.role == "HOD" %}
+        <a href="{% url 'delete_alumni' alumni.id %}"
+           class="btn btn-danger btn-sm fw-bold"
+           style="border-radius:12px;"
+           onclick="return confirm('Delete this alumni?');">
+          Delete
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- BODY -->
+    <div class="p-4">
+      <div class="row g-4 align-items-start">
+
+        <!-- LEFT: PHOTO + QUICK -->
+        <div class="col-lg-4">
+          <div class="info-card">
+            <div class="info-title">🖼 Photo</div>
+
+            {% if alumni.photo %}
+              <img src="{{ alumni.photo.url }}" class="avatar mb-3" alt="Alumni Photo">
+            {% else %}
+              <div class="avatar d-flex align-items-center justify-content-center mb-3">
+                <div class="muted">No Photo</div>
+              </div>
+            {% endif %}
+
+            <div class="kv">
+              <div class="k">Company</div>
+              <div class="v">{{ alumni.company_name|default:"-" }}</div>
+            </div>
+
+            <div class="kv">
+              <div class="k">Job Title</div>
+              <div class="v">{{ alumni.job_title|default:"-" }}</div>
+            </div>
+
+            <div class="kv">
+              <div class="k">Status</div>
+              <div class="v">
+                {% if alumni.job_status == "Placed" %}
+                  <span class="status s-placed">Placed</span>
+                {% elif alumni.job_status == "Promoted" %}
+                  <span class="status s-promoted">Promoted</span>
+                {% elif alumni.job_status == "Resigned" %}
+                  <span class="status s-resigned">Resigned</span>
+                {% elif alumni.job_status == "Higher Studies" %}
+                  <span class="status s-higher">Higher Studies</span>
+                {% else %}
+                  -
+                {% endif %}
+              </div>
+            </div>
+
+            <h5>ID Card:</h5>
+
+          {% if alumni.id_card %}
+              <div class="text-center">
+                  <a href="{{ alumni.id_card.url }}" target="_blank">
+                      <img src="{{ alumni.id_card.url }}" width="250" class="img-thumbnail">
+                  </a>
+              </div>
+          {% else %}
+              <p>No ID card uploaded</p>
+          {% endif %}
+          </div>
+        </div>
+
+        <!-- RIGHT: DETAILS -->
+        <div class="col-lg-8">
+          <div class="row g-4">
+
+            <!-- PERSONAL -->
+            <div class="col-12">
+              <div class="info-card">
+                <div class="info-title">👤 Personal Information</div>
+
+                <div class="kv">
+                  <div class="k">Date of Birth</div>
+                  <div class="v">{{ alumni.dob|date:"d M Y"|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Gender</div>
+                  <div class="v">{{ alumni.gender|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Email</div>
+                  <div class="v">{{ alumni.email|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Phone</div>
+                  <div class="v">{{ alumni.phone|default:"-" }}</div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- EDUCATION -->
+            <div class="col-12">
+              <div class="info-card">
+                <div class="info-title">🎓 Educational Details</div>
+
+                <div class="kv">
+                  <div class="k">Department</div>
+                  <div class="v">{{ alumni.department }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Programme</div>
+                  <div class="v">{{ alumni.programme|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Admission Year</div>
+                  <div class="v">{{ alumni.admission_year|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Graduation Year</div>
+                  <div class="v">{{ alumni.graduation_year }}</div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- PLACEMENT -->
+            <div class="col-12">
+              <div class="info-card">
+                <div class="info-title">💼 Placement Details</div>
+
+                <div class="kv">
+                  <div class="k">Company</div>
+                  <div class="v">{{ alumni.company_name|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Job Title</div>
+                  <div class="v">{{ alumni.job_title|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Location</div>
+                  <div class="v">{{ alumni.location|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Placement Year</div>
+                  <div class="v">{{ alumni.placement_year|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Salary</div>
+                  <div class="v">
+                    {% if alumni.salary %}
+                      ₹ {{ alumni.salary }} LPA
+                    {% else %}
+                      -
+                    {% endif %}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+            <!-- SYSTEM INFO -->
+            <div class="col-12">
+              <div class="info-card">
+                <div class="info-title">⚙ System Information</div>
+
+                <div class="kv">
+                  <div class="k">Record Created</div>
+                  <div class="v">{{ alumni.created_at|date:"d M Y, H:i"|default:"-" }}</div>
+                </div>
+                <div class="kv">
+                  <div class="k">Last Updated</div>
+                  <div class="v">{{ alumni.updated_at|date:"d M Y, H:i"|default:"-" }}</div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <a href="{% url 'alumni_list' %}" class="btn btn-outline-secondary fw-bold" style="border-radius:12px;">
+          ← Back to Alumni List
+        </a>
+
+        {% if user.is_authenticated and user.teacher %}
+          <div class="muted">You are logged in as {{ user.teacher.role }}</div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+
+</div>
+{% endblock %}

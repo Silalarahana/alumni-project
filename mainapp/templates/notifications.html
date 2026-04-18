@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% block title %}Placement Notifications{% endblock %}
+
+{% block content %}
+<style>
+  body {
+    background: #f1f5f9;
+  }
+
+  .wrap {
+    width: 100%;
+  }
+
+  .panel {
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+    overflow: hidden;
+  }
+
+  .panel-head {
+    padding: 18px 24px;
+    background: #0f172a;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .panel-head h3 {
+    margin: 0;
+    font-size: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .filter-bar {
+    padding: 15px 20px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  .form-select {
+    border-radius: 8px;
+    border: 1px solid #cbd5e1;
+  }
+
+  .btn {
+    border-radius: 8px;
+    padding: 6px 14px;
+  }
+
+  .btn-success {
+    background: #2563eb;
+    border: none;
+  }
+
+  .btn-success:hover {
+    background: #1d4ed8;
+  }
+
+  .note-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px;
+    background: #fff;
+    transition: all 0.25s ease;
+    height: 100%;
+  }
+
+  .note-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+    color: inherit;
+  }
+
+  .note-card h5 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #0f172a;
+  }
+
+  .note-card p {
+    font-size: 14px;
+  }
+
+  .badge-type {
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-weight: 500;
+  }
+
+  .career { background: #ecfdf5; color: #047857; }
+  .exam { background: #fffbeb; color: #b45309; }
+  .job { background: #eef2ff; color: #4338ca; }
+  .workshop { background: #fef2f2; color: #b91c1c; }
+
+  .group-title {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e293b;
+    border-left: 4px solid #2563eb;
+    padding-left: 10px;
+  }
+
+  .empty-state {
+    padding: 40px;
+    text-align: center;
+    color: #64748b;
+  }
+</style>
+
+<div class="container-fluid mt-4 px-4">
+
+  <div class="panel">
+
+    <!-- HEADER -->
+    <div class="panel-head">
+      <h3>📢 Placement Notifications</h3>
+
+      {% if user.is_authenticated and user.teacher and user.teacher.role == "TEACHER" %}
+      <a href="{% url 'add_notification' %}" class="btn btn-outline-light btn-sm">
+          + Add Notification
+        </a>
+      {% endif %}
+    </div>
+
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <form method="GET" class="d-flex gap-2">
+
+        <select name="type" class="form-select" style="max-width: 250px;">
+          <option value="">All Notifications</option>
+
+          <option value="career" {% if request.GET.type == "career" %}selected{% endif %}>
+            Career Guidance
+          </option>
+
+          <option value="exam" {% if request.GET.type == "exam" %}selected{% endif %}>
+            Exams
+          </option>
+
+          <option value="job" {% if request.GET.type == "job" %}selected{% endif %}>
+            Job Opportunity
+          </option>
+
+          <option value="workshop" {% if request.GET.type == "workshop" %}selected{% endif %}>
+            Workshops
+          </option>
+        </select>
+
+        <button type="submit" class="btn btn-success">🔍 Filter</button>
+
+        <a href="{% url 'notification_list' %}" class="btn btn-secondary">
+          Reset
+        </a>
+
+      </form>
+    </div>
+
+    <!-- BODY -->
+    <div class="p-4">
+
+      {% if notifications %}
+
+        {% regroup notifications by notification_type as groups %}
+
+        {% for group in groups %}
+
+          <div class="group-title">
+            {% if group.grouper == "career" %}
+              🎓 Career Guidance
+            {% elif group.grouper == "exam" %}
+              📝 Exams
+            {% elif group.grouper == "job" %}
+              💼 Job Opportunities
+            {% elif group.grouper == "workshop" %}
+              🛠 Workshops
+            {% endif %}
+          </div>
+
+          <div class="row mt-3">
+            {% for n in group.list %}
+
+              <div class="col-md-6 mb-3">
+                <a href="{% url 'notification_detail' n.id %}" style="text-decoration:none;">
+                  <div class="note-card">
+
+                    <h5>{{ n.title }}</h5>
+
+                    <span class="badge-type
+                      {% if n.notification_type == 'career' %}career
+                      {% elif n.notification_type == 'exam' %}exam
+                      {% elif n.notification_type == 'job' %}job
+                      {% elif n.notification_type == 'workshop' %}workshop
+                      {% endif %}">
+                      {{ n.notification_type|title }}
+                    </span>
+
+                    <p class="mt-2 text-muted">
+                      {{ n.description|truncatewords:15 }}
+                    </p>
+
+                    <small class="text-muted">
+                      {{ n.created_at|date:"M d, Y • h:i A" }}
+                    </small>
+
+                  </div>
+                </a>
+              </div>
+
+            {% endfor %}
+          </div>
+
+        {% endfor %}
+
+      {% else %}
+      <div class="empty-state">
+        <h5>No notifications yet</h5>
+        <p>New updates will appear here.</p>
+      </div>
+      {% endif %}
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}

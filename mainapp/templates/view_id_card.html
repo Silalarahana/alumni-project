@@ -1,0 +1,23 @@
+ {% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4 text-center">
+
+  <h3>ID Card</h3>
+
+  {% if alumni.id_card %}
+    <img src="{{ alumni.id_card.url }}" class="img-fluid mt-3" style="max-height:500px;">
+  {% else %}
+    <p>No ID card uploaded</p>
+  {% endif %}
+
+  <br><br>
+
+  <!-- BACK BUTTON -->
+  <a href="{% url 'edit_alumni' alumni.id %}" class="btn btn-secondary">
+    ⬅ Back
+  </a>
+
+</div>
+
+{% endblock %}

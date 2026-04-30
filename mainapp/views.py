@@ -11,6 +11,7 @@ from .models import Department
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Alumni, Department, Programme
 from django.db.models import Max
+from django.contrib import messages
 def is_hod(user):
     return user.is_staff
 
@@ -238,15 +239,6 @@ from .models import Alumni
 
     
 @login_required
-def alumni_detail(request, pk):
-    teacher = getattr(request.user, 'teacher', None)
-
-    if not teacher or teacher.role != "HOD":
-        return HttpResponseForbidden("Only HOD can view student details.")
-
-    alumni = get_object_or_404(Alumni, pk=pk)
-    return render(request, 'alumni_detail.html', {'alumni': alumni})
-
 def notifications(request):
     notifications = Notification.objects.all().order_by('-created_at')
 
@@ -414,42 +406,11 @@ def alumni_detail(request, id):
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Alumni, Department, Programme
 
-def edit_alumni(request, pk):
-    alumni = get_object_or_404(Alumni, pk=pk)
-    departments = Department.objects.all()
-    programmes = Programme.objects.all()
-
-    if request.method == "POST":
-        alumni.name = request.POST.get("name")
-        alumni.email = request.POST.get("email")
-        alumni.phone = request.POST.get("phone")
-        alumni.graduation_year = request.POST.get("graduation_year")
-
-        department_id = request.POST.get("department")
-        programme_id = request.POST.get("programme")
-
-        if department_id:
-            alumni.department = Department.objects.get(id=department_id)
-
-        if programme_id:
-            alumni.programme = Programme.objects.get(id=programme_id)
-
-        alumni.save()
-        return redirect("alumni_detail", pk=alumni.pk)
-
-    return render(request, "edit_alumni.html", {
-        "alumni": alumni,
-        "departments": departments,
-        "programmes": programmes,
-    })
 @login_required
 def delete_alumni(request, id):
     alumni = Alumni.objects.get(id=id)
     alumni.delete()
     return redirect('alumni_list')
-def alumni_detail(request, id):
-    alumni = Alumni.objects.get(id=id)
-    return render(request, 'alumni_detail.html', {'alumni': alumni})
 
 from django.contrib.auth.decorators import login_required
 from .models import Alumni, Notification
@@ -570,22 +531,23 @@ def add_notification(request):
 
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from .models import Alumni, Department, Programme
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect, get_object_or_404
 from .models import Alumni, Department as DepartmentModel, Programme as ProgrammeModel
 
+@login_required
 def edit_alumni(request, id):
     alumni = get_object_or_404(Alumni, id=id)
     departments = DepartmentModel.objects.all()
     programmes = ProgrammeModel.objects.all()
 
     if request.method == "POST":
+        print("FORM SUBMITTED")
+        print("POST DATA:", request.POST)
+
+        # BASIC DETAILS
         alumni.name = request.POST.get('name')
-
-        dob = request.POST.get('dob')
-        alumni.dob = dob if dob else None
-
+        alumni.dob = request.POST.get('dob') or None
         alumni.gender = request.POST.get('gender')
         alumni.email = request.POST.get('email')
         alumni.phone = request.POST.get('phone')
@@ -593,7 +555,13 @@ def edit_alumni(request, id):
         alumni.department_id = request.POST.get('department') or None
         alumni.programme_id = request.POST.get('programme') or None
         alumni.admission_year = request.POST.get('admission_year') or None
-        alumni.graduation_year = request.POST.get('graduation_year') or None
+        graduation_year = request.POST.get('graduation_year')
+
+        if not graduation_year:
+            messages.error(request, "Graduation year is required")
+            return redirect('edit_alumni', id=alumni.id)
+
+        alumni.graduation_year = int(graduation_year)
 
         alumni.job_title = request.POST.get('job_title')
         alumni.company_name = request.POST.get('company_name')
@@ -601,15 +569,19 @@ def edit_alumni(request, id):
         alumni.salary = request.POST.get('salary') or None
         alumni.job_status = request.POST.get('job_status')
         alumni.location = request.POST.get('location')
-        if 'remove_photo' in request.POST:
+
+        # 🔥 REMOVE FILES FIRST (PRIORITY)
+        if request.POST.get('remove_photo') == 'on':
             if alumni.photo:
                 alumni.photo.delete(save=False)
                 alumni.photo = None
 
-        form = AlumniForm(request.POST, request.FILES, instance=alumni)
-        if form.is_valid():
-            form.save()
+        if request.POST.get('remove_id_card') == 'on':
+            if alumni.id_card:
+                alumni.id_card.delete(save=False)
+                alumni.id_card = None
 
+        # 🔥 THEN HANDLE NEW UPLOADS
         if request.FILES.get('photo'):
             alumni.photo = request.FILES.get('photo')
 
@@ -617,17 +589,14 @@ def edit_alumni(request, id):
             alumni.id_card = request.FILES.get('id_card')
 
         alumni.save()
+
         return redirect('alumni_detail', id=alumni.id)
 
-    context = {
+    return render(request, 'edit_alumni.html', {
         'alumni': alumni,
         'departments': departments,
         'programmes': programmes,
-    }
-
-    return render(request, 'edit_alumni.html', context)
-
-
+    })
 from .models import Department
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
@@ -763,3 +732,8 @@ from django.db.models import Count
 from .models import Alumni
 import csv
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404, render
+
+def view_id_card(request, id):
+    alumni = get_object_or_404(Alumni, id=id)
+    return render(request, "view_id_card.html", {"alumni": alumni})

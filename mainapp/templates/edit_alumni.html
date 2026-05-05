@@ -258,71 +258,71 @@
         </div>
 
         <!-- DOCUMENTS -->
-        <div class="section mb-4">
-          <div class="section-head">📎 Documents</div>
-          <div class="section-body">
-            <div class="row g-3">
+<div class="card mb-3">
+  <div class="card-header fw-bold">Documents</div>
+  <div class="card-body row g-3">
 
-              <div class="col-md-6">
-                <label class="form-label fw-bold">Photo</label>
-                <input type="file" name="photo" class="form-control">
-                {% if alumni.photo %}
-                  <div class="mt-2">
-                    <div class="text-muted fw-bold">Current Photo</div>
-                    <img src="{{ alumni.photo.url }}" class="preview-img mt-2" alt="Current Photo">
-                  </div>
-                {% endif %}
-                <label>
-                  <input type="checkbox" name="remove_photo"> Remove Photo
-              </label>
-              </div>
+    <!-- PHOTO -->
+    <div class="col-md-6">
+      <label>Photo</label>
+      <input type="file" name="photo" class="form-control">
 
-              <div class="col-md-6">
-              <label class="form-label fw-bold">ID Card</label>
-              <input type="file" name="id_card" class="form-control">
+      {% if alumni.photo %}
+        <div class="mt-2">
+          <p class="fw-bold mb-1">Current Photo</p>
+          <img src="{{ alumni.photo.url }}" width="120" class="mb-2">
 
-              {% if alumni.id_card %}
-                <div class="mt-2">
-                  <div class="text-muted fw-bold">Current ID Card</div>
-
-                  <a class="btn btn-sm btn-outline-primary btn-round mt-2"
-                    href="{{ alumni.id_card.url }}" target="_blank">
-                    View Uploaded ID Card
-                  </a>
-                </div>
-              {% endif %}
-
-              <!-- ✅ ADD THIS -->
-              <div class="form-check mt-2">
-                <input type="checkbox"
-                      name="remove_id_card"
-                      class="form-check-input"
-                      id="removeIdCard">
-                <label class="form-check-label" for="removeIdCard">
-                  Remove ID Card
-                </label>
-              </div>
-
-            </div>
-
-            </div>
+          <!-- SHOW REMOVE ONLY IF EXISTS -->
+          <div class="form-check">
+            <input type="checkbox" name="remove_photo" class="form-check-input" id="removePhoto">
+            <label class="form-check-label" for="removePhoto">
+              Remove Photo
+            </label>
           </div>
         </div>
+      {% else %}
+        <p class="text-muted mt-2">No photo uploaded</p>
+      {% endif %}
+    </div>
 
-        <!-- ACTIONS -->
-        <div class="d-flex justify-content-end gap-2">
-          <a href="{% url 'alumni_detail' alumni.id %}" class="btn btn-outline-secondary btn-round">
-            Cancel
+    <!-- ID CARD -->
+    <div class="col-md-6">
+      <label>ID Card</label>
+      <input type="file" name="id_card" class="form-control">
+
+      {% if alumni.id_card %}
+        <div class="mt-2">
+          <p class="fw-bold mb-1">Current ID Card</p>
+
+          <a href="{% url 'view_id_card' alumni.id %}"
+             class="btn btn-sm btn-primary mb-2">
+            View ID Card
           </a>
-          <button type="submit" class="btn btn-primary btn-round px-4">
-            Update Alumni
-          </button>
-        </div>
 
-      </form>
+          <!-- SHOW REMOVE ONLY IF EXISTS -->
+          <div class="form-check">
+            <input type="checkbox" name="remove_id_card" class="form-check-input" id="removeIdCard">
+            <label class="form-check-label" for="removeIdCard">
+              Remove ID Card
+            </label>
+          </div>
+        </div>
+      {% else %}
+        <p class="text-muted mt-2">No ID card uploaded</p>
+      {% endif %}
     </div>
 
   </div>
-
 </div>
+<!-- Submit Buttons -->
+        <div class="d-flex justify-content-end gap-2 mt-3">
+          <a href="{% url 'alumni_detail' alumni.id %}" 
+             class="btn btn-secondary btn-round">Cancel</a>
+          <button type="submit" 
+                  class="btn btn-primary btn-round">💾 Save Changes</button>
+        </div>
+
+      </form>  
+    </div>     
+  </div>       
 {% endblock %}

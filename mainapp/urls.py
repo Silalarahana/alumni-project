@@ -4,8 +4,8 @@ from . import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('alumni/', views.alumni_list, name='alumni_list'),
-    path('alumni/<int:id>/', views.alumni_detail, name='alumni_detail'),
-    path('alumni/edit/<int:id>/', views.edit_alumni, name='edit_alumni'),  # ← only once
+    path('alumni/edit/<int:id>/', views.edit_alumni, name='edit_alumni'),  # ← FIRST
+    path('alumni/<int:id>/', views.alumni_detail, name='alumni_detail'),   # ← SECOND
     path('delete/<int:id>/', views.delete_alumni, name='delete_alumni'),
 
     path('notifications/', views.notifications, name='notifications'),
